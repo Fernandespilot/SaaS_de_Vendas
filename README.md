@@ -58,7 +58,8 @@ erDiagram
 ```
 
 ### Modelo Lógico
-![Diagrama Entidade Relacionamento Lógico](document/img/der-logico.jpg)
+
+![Diagrama Entidade Relacionamento Conceitual](document/img/der-conceitual.jpg)
 
 ---
 
