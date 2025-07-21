@@ -6,15 +6,13 @@ Sistema de Gestão de Vendas desenvolvido para facilitar a venda de produtos, ge
 
 ## Índice
 
-- [ Visão Geral](#-visão-geral)
-- [ Visão de Produto](#-visão-de-produto)
-- [ Sobre o Projeto](#-sobre-o-projeto)
-- [ Objetivos do Produto](#-objetivos-do-produto)
-- [ Tecnologias Utilizadas](#-tecnologias-utilizadas)
-- [ Story](#-story)
-- [ Modelo Conceitual DER](#-modelo-conceitual-der)
-- [ Modelo Conceitual Orientado a Objetos (OO)](#-modelo-conceitual-orientado-a-objetos-oo)
-- [ Diagrama de Casos de Uso](#-diagrama-de-casos-de-uso)
+- [Visão Geral](#visão-geral)
+- [Visão de Produto](#visão-de-produto)
+- [Sobre o Projeto](#sobre-o-projeto)
+- [Objetivos do Produto](#objetivos-do-produto)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Story](#story)
+- [Como executar o projeto](#como-executar-o-projeto)
 
 ---
 
@@ -47,10 +45,10 @@ Este projeto foi desenvolvido como parte da disciplina **Análise e Projeto de S
 
 ## Objetivos do Produto
 
-- ✅ Automatizar o controle de entrada e saída de produtos
-- ✅ Gerenciar clientes e vendedores de forma eficiente
-- ✅ Facilitar a geração de relatórios financeiros e operacionais
-- ✅ Oferecer interface simples e interativa para diferentes perfis de usuário
+- Automatizar o controle de entrada e saída de produtos
+- Gerenciar clientes e vendedores de forma eficiente
+- Facilitar a geração de relatórios financeiros e operacionais
+- Oferecer interface simples e interativa para diferentes perfis de usuário
 
 ---
 
@@ -58,23 +56,23 @@ Este projeto foi desenvolvido como parte da disciplina **Análise e Projeto de S
 
 | Ferramenta           | Finalidade                                              |
 |-----------------------|--------------------------------------------------------|
-| `Python 3.11`         | Linguagem principal                                     |
-| `Django 4.2`          | Framework web principal                                 |
-| `PostgreSQL`          | Banco de dados principal                                |
-| `HTML + CSS`          | Interface administrativa                                |
-| `Mermaid Chart`       | Diagrama de Entidade Relacionamento (DER)              |
-| `Lucidchart`          | Diagrama de casos de uso e modelos orientados a objetos |
-| `pip`                 | Gerenciador de pacotes Python                           |
-| `Virtualenv`          | Isolamento de ambiente                                  |
-| `Git/GitHub`          | Controle de versão                                      |
-| `VSCode`              | Editor de código recomendado                            |
-| `Docker` *(em planejamento)* | Containerização futura para implantação          |
+| Python 3.11           | Linguagem principal                                     |
+| Django 4.2            | Framework web principal                                 |
+| PostgreSQL            | Banco de dados principal                                |
+| HTML + CSS            | Interface administrativa                                |
+| Mermaid Chart         | Diagrama de Entidade Relacionamento (DER)               |
+| Lucidchart            | Diagrama de casos de uso e modelos orientados a objetos |
+| pip                   | Gerenciador de pacotes Python                           |
+| Virtualenv            | Isolamento de ambiente                                  |
+| Git/GitHub            | Controle de versão                                      |
+| VSCode                | Editor de código recomendado                            |
+| Docker (planejado)    | Containerização futura para implantação                 |
 
 ---
 
 ## Story
 
-As histórias de usuário estão organizadas no [Quadro de Projetos do GitHub](https://github.com/orgs/APS25-1/projects/3/views/1), onde é possível acompanhar visualmente o progresso, os cards de funcionalidades, e o fluxo de trabalho por status.
+As histórias de usuário estão organizadas no [Quadro de Projetos do GitHub](https://github.com/orgs/APS25-1/projects/3/views/1), onde é possível acompanhar visualmente o progresso, os cards de funcionalidades e o fluxo de trabalho por status.
 
 **Perfis de usuários contemplados:**
 - Promotor de vendas
@@ -84,7 +82,8 @@ As histórias de usuário estão organizadas no [Quadro de Projetos do GitHub](h
 
 ---
 
-## Como executar o projeto 
+## Como executar o projeto
+
 ```bash
 # Clone o repositório
 git clone https://github.com/usuario/sisvenda.git
@@ -101,4 +100,3 @@ pip install -r requirements.txt
 
 # Execute o projeto
 python manage.py runserver
-```
