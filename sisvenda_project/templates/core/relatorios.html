@@ -1,0 +1,392 @@
+{% extends 'base.html' %}
+
+{% block title %}Relatórios - SisVenda{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    Relatórios
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Filtros</h5>
+                </div>
+                <div class="card-body">
+                    <form method="get">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label for="data_inicio" class="form-label">Data Início</label>
+                                <input type="date" name="data_inicio" id="data_inicio" class="form-control" 
+                                       value="{{ request.GET.data_inicio }}">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="data_fim" class="form-label">Data Fim</label>
+                                <input type="date" name="data_fim" id="data_fim" class="form-control" 
+                                       value="{{ request.GET.data_fim }}">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="tipo_relatorio" class="form-label">Tipo de Relatório</label>
+                                <select name="tipo_relatorio" id="tipo_relatorio" class="form-select">
+                                    <option value="">Todos</option>
+                                    <option value="vendas" {% if request.GET.tipo_relatorio == 'vendas' %}selected{% endif %}>Vendas</option>
+                                    <option value="comissoes" {% if request.GET.tipo_relatorio == 'comissoes' %}selected{% endif %}>Comissões</option>
+                                    <option value="estoque" {% if request.GET.tipo_relatorio == 'estoque' %}selected{% endif %}>Estoque</option>
+                                    <option value="clientes" {% if request.GET.tipo_relatorio == 'clientes' %}selected{% endif %}>Clientes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="formato" class="form-label">Formato</label>
+                                <select name="formato" id="formato" class="form-select">
+                                    <option value="html" {% if request.GET.formato == 'html' %}selected{% endif %}>HTML</option>
+                                    <option value="pdf" {% if request.GET.formato == 'pdf' %}selected{% endif %}>PDF</option>
+                                    <option value="excel" {% if request.GET.formato == 'excel' %}selected{% endif %}>Excel</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search me-2"></i>Gerar Relatório
+                                </button>
+                                <a href="{% url 'relatorios' %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-2"></i>Limpar Filtros
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Relatório de Vendas -->
+    {% if dados_vendas %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Relatório de Vendas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Período</th>
+                                    <th>Total de Pedidos</th>
+                                    <th>Valor Total</th>
+                                    <th>Ticket Médio</th>
+                                    <th>Comissão Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ periodo_display }}</td>
+                                    <td>{{ dados_vendas.total_pedidos }}</td>
+                                    <td>R$ {{ dados_vendas.valor_total|floatformat:2 }}</td>
+                                    <td>R$ {{ dados_vendas.ticket_medio|floatformat:2 }}</td>
+                                    <td>R$ {{ dados_vendas.comissao_total|floatformat:2 }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vendas por Promotor -->
+    {% if vendas_por_promotor %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Vendas por Promotor</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Promotor</th>
+                                    <th>Total de Pedidos</th>
+                                    <th>Valor Total</th>
+                                    <th>Comissão</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for promotor in vendas_por_promotor %}
+                                <tr>
+                                    <td>{{ promotor.nome }}</td>
+                                    <td>{{ promotor.total_pedidos }}</td>
+                                    <td>R$ {{ promotor.valor_total|floatformat:2 }}</td>
+                                    <td>R$ {{ promotor.comissao_total|floatformat:2 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Vendas por Produto -->
+    {% if vendas_por_produto %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Produtos Mais Vendidos</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Quantidade Vendida</th>
+                                    <th>Valor Total</th>
+                                    <th>Percentual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for produto in vendas_por_produto %}
+                                <tr>
+                                    <td>{{ produto.nome }}</td>
+                                    <td>{{ produto.quantidade_vendida }}</td>
+                                    <td>R$ {{ produto.valor_total|floatformat:2 }}</td>
+                                    <td>{{ produto.percentual|floatformat:1 }}%</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+
+    <!-- Relatório de Estoque -->
+    {% if dados_estoque %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Relatório de Estoque</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Código</th>
+                                    <th>Estoque Atual</th>
+                                    <th>Estoque Mínimo</th>
+                                    <th>Status</th>
+                                    <th>Valor em Estoque</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for produto in dados_estoque %}
+                                <tr>
+                                    <td>{{ produto.nome }}</td>
+                                    <td>{{ produto.codigo }}</td>
+                                    <td>{{ produto.estoque_atual }}</td>
+                                    <td>{{ produto.estoque_minimo }}</td>
+                                    <td>
+                                        {% if produto.estoque_atual <= produto.estoque_minimo %}
+                                            <span class="badge bg-danger">Crítico</span>
+                                        {% elif produto.estoque_atual <= produto.estoque_minimo|add:10 %}
+                                            <span class="badge bg-warning">Baixo</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Normal</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>R$ {{ produto.valor_estoque|floatformat:2 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Relatório de Clientes -->
+    {% if dados_clientes %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Relatório de Clientes</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Município</th>
+                                    <th>Total de Pedidos</th>
+                                    <th>Valor Total</th>
+                                    <th>Último Pedido</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cliente in dados_clientes %}
+                                <tr>
+                                    <td>{{ cliente.nome }}</td>
+                                    <td>{{ cliente.municipio }}</td>
+                                    <td>{{ cliente.total_pedidos }}</td>
+                                    <td>R$ {{ cliente.valor_total|floatformat:2 }}</td>
+                                    <td>{{ cliente.ultimo_pedido|date:"d/m/Y"|default:"Nunca" }}</td>
+                                    <td>
+                                        {% if cliente.status_financeiro == 'aprovado' %}
+                                            <span class="badge bg-success">Aprovado</span>
+                                        {% elif cliente.status_financeiro == 'pendente' %}
+                                            <span class="badge bg-warning">Pendente</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Reprovado</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Gráficos -->
+    {% if dados_vendas %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Evolução das Vendas</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="graficoVendas" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Vendas por Categoria</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="graficoCategoria" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Mensagem quando não há dados -->
+    {% if not dados_vendas and not dados_estoque and not dados_clientes %}
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <i class="fas fa-info-circle fa-3x mb-3"></i>
+                <h4>Nenhum dado encontrado</h4>
+                <p>Selecione os filtros acima e clique em "Gerar Relatório" para visualizar os dados.</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% if dados_vendas %}
+<!-- Hidden data elements to store chart data -->
+<div id="dados-vendas" 
+     data-labels='{{ dados_vendas.labels|safe }}' 
+     data-valores='{{ dados_vendas.valores|safe }}' 
+     style="display:none;"></div>
+<div id="dados-categoria" 
+     data-labels='{{ dados_vendas.categorias_labels|safe }}' 
+     data-valores='{{ dados_vendas.categorias_valores|safe }}' 
+     style="display:none;"></div>
+<script type="text/javascript">
+// Dados pré-processados no Django, disponibilizados como JSON
+// Isso evita problemas de sintaxe ao misturar Django templates e JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    // Variáveis de dados obtidas via data attributes 
+    var vendasLabels = JSON.parse(document.getElementById('dados-vendas').dataset.labels);
+    var vendasData = JSON.parse(document.getElementById('dados-vendas').dataset.valores);
+    var categoriaLabels = JSON.parse(document.getElementById('dados-categoria').dataset.labels);
+    var categoriaData = JSON.parse(document.getElementById('dados-categoria').dataset.valores);
+    // Gráfico de Vendas
+    var ctx1 = document.getElementById('graficoVendas').getContext('2d');
+    var graficoVendas = new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: vendasLabels,
+            datasets: [{
+                label: 'Vendas (R$)',
+                data: vendasData,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Gráfico de Categoria
+    var ctx2 = document.getElementById('graficoCategoria').getContext('2d');
+    var graficoCategoria = new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+            labels: categoriaLabels,
+            datasets: [{
+                data: categoriaData,
+                backgroundColor: [
+                    '#FF6384',
+                    '#36A2EB',
+                    '#FFCE56',
+                    '#4BC0C0',
+                    '#9966FF',
+                    '#FF9F40'
+                ]
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+});
+</script>
+{% endif %}
+{% endblock %}

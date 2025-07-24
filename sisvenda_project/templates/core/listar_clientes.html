@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block title %}Meus Clientes - SisVenda{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-users me-2"></i>
+                    Meus Clientes
+                </h1>
+                <a href="{% url 'cadastrar_cliente' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>
+                    Novo Cliente
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Buscar</label>
+                            <input type="text" name="busca" class="form-control" 
+                                   placeholder="Nome, endereço..." value="{{ busca }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Ordenar por</label>
+                            <select name="ordenacao" class="form-select">
+                                <option value="nome" {% if ordenacao == 'nome' %}selected{% endif %}>Nome</option>
+                                <option value="endereco" {% if ordenacao == 'endereco' %}selected{% endif %}>Endereço</option>
+                                <option value="municipio" {% if ordenacao == 'municipio' %}selected{% endif %}>Município</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">&nbsp;</label>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-outline-primary">
+                                    <i class="fas fa-search me-1"></i>Filtrar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Clientes -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    {% if clientes %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>Município</th>
+                                        <th>Telefone</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for cliente in clientes %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-3">
+                                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
+                                                         style="width: 40px; height: 40px;">
+                                                        {{ cliente.user.first_name|slice:":1" }}{{ cliente.user.last_name|slice:":1" }}
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">{{ cliente.user.get_full_name }}</h6>
+                                                    <small class="text-muted">{{ cliente.user.email }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-map-marker-alt text-muted me-1"></i>
+                                            {{ cliente.municipio.nome }} - {{ cliente.municipio.estado }}
+                                        </td>
+                                        <td>
+                                            {% if cliente.user.telefone %}
+                                                <i class="fas fa-phone text-muted me-1"></i>
+                                                {{ cliente.user.telefone }}
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if cliente.status_financeiro == 'aprovado' %}
+                                                <span class="badge bg-success">Aprovado</span>
+                                            {% elif cliente.status_financeiro == 'pendente' %}
+                                                <span class="badge bg-warning">Pendente</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Reprovado</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'criar_pedido' %}?cliente={{ cliente.id }}" 
+                                               class="btn btn-sm btn-primary" title="Criar Pedido">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Paginação -->
+                        {% if clientes.has_other_pages %}
+                            <nav class="mt-4">
+                                <ul class="pagination justify-content-center">
+                                    {% if clientes.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ clientes.previous_page_number }}{% if busca %}&busca={{ busca }}{% endif %}{% if ordenacao %}&ordenacao={{ ordenacao }}{% endif %}">
+                                                Anterior
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    
+                                    {% for num in clientes.paginator.page_range %}
+                                        {% if clientes.number == num %}
+                                            <li class="page-item active">
+                                                <span class="page-link">{{ num }}</span>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ num }}{% if busca %}&busca={{ busca }}{% endif %}{% if ordenacao %}&ordenacao={{ ordenacao }}{% endif %}">
+                                                    {{ num }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    {% if clientes.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ clientes.next_page_number }}{% if busca %}&busca={{ busca }}{% endif %}{% if ordenacao %}&ordenacao={{ ordenacao }}{% endif %}">
+                                                Próximo
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <h5>Nenhum cliente encontrado</h5>
+                            <p class="text-muted">Cadastre o primeiro cliente para começar.</p>
+                            <a href="{% url 'cadastrar_cliente' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Cadastrar Cliente
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

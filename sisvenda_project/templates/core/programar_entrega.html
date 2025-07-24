@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Programar Entrega - SisVenda{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-truck me-2"></i>
+                    Programar Entrega
+                </h1>
+                <a href="{% url 'listar_pedidos' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>
+                    Voltar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Informações do Pedido -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Informações do Pedido</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Código:</strong> {{ pedido.codigo }}</p>
+                            <p><strong>Data:</strong> {{ pedido.data_pedido|date:"d/m/Y H:i" }}</p>
+                            <p><strong>Cliente:</strong> {{ pedido.cliente.user.get_full_name }}</p>
+                            <p><strong>Promotor:</strong> {{ pedido.promotor.user.get_full_name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Status:</strong> <span class="badge bg-success">{{ pedido.get_status_display }}</span></p>
+                            <p><strong>Valor Total:</strong> <span class="text-success">R$ {{ pedido.valor_total|floatformat:2 }}</span></p>
+                            <p><strong>Aprovado em:</strong> {{ pedido.data_aprovacao|date:"d/m/Y H:i" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Endereço de Entrega -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Endereço de Entrega</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Cliente:</strong> {{ pedido.cliente.user.get_full_name }}</p>
+                            <p><strong>Endereço:</strong> {{ pedido.cliente.endereco|default:"Não informado" }}</p>
+                            <p><strong>Cidade:</strong> {{ pedido.cliente.municipio.nome }} - {{ pedido.cliente.municipio.estado }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Telefone:</strong> {{ pedido.cliente.user.telefone|default:"Não informado" }}</p>
+                            <p><strong>Email:</strong> {{ pedido.cliente.user.email }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Itens do Pedido -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Itens para Entrega</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Quantidade</th>
+                                    <th>Peso/Volume</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in pedido.itens.all %}
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <strong>{{ item.produto.nome }}</strong><br>
+                                                <small class="text-muted">{{ item.produto.codigo }}</small>
+                                            </div>
+                                        </td>
+                                        <td>{{ item.quantidade }} {{ item.produto.unidade|default:"UN" }}</td>
+                                        <td>
+                                            {% if item.produto.peso %}
+                                                {{ item.produto.peso|floatformat:2 }} kg
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                        <td>R$ {{ item.subtotal|floatformat:2 }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="3" class="text-end">Total:</th>
+                                    <th><strong class="text-success">R$ {{ pedido.valor_total|floatformat:2 }}</strong></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Formulário de Programação -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Programar Entrega</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="data_entrega" class="form-label">Data da Entrega</label>
+                            <input type="date" name="data_entrega" id="data_entrega" class="form-control" 
+                                   min="{{ hoje|date:'Y-m-d' }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="hora_entrega" class="form-label">Horário da Entrega</label>
+                            <input type="time" name="hora_entrega" id="hora_entrega" class="form-control" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="transportadora" class="form-label">Transportadora</label>
+                            <select name="transportadora" id="transportadora" class="form-select" required>
+                                <option value="">Selecione uma transportadora</option>
+                                <option value="entrega_propria">Entrega Própria</option>
+                                <option value="correios">Correios</option>
+                                <option value="transportadora_abc">Transportadora ABC</option>
+                                <option value="transportadora_xyz">Transportadora XYZ</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="prioridade" class="form-label">Prioridade</label>
+                            <select name="prioridade" id="prioridade" class="form-select" required>
+                                <option value="normal">Normal</option>
+                                <option value="alta">Alta</option>
+                                <option value="urgente">Urgente</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="observacoes" class="form-label">Observações</label>
+                            <textarea name="observacoes" id="observacoes" class="form-control" rows="3" 
+                                      placeholder="Instruções especiais para a entrega..."></textarea>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-calendar-plus me-2"></i>Programar Entrega
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Informações Adicionais -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Informações da Entrega</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Região:</span>
+                            <strong>{{ pedido.cliente.municipio.nome }}</strong>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Total de Itens:</span>
+                            <strong>{{ pedido.itens.count }}</strong>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Valor da Entrega:</span>
+                            <strong class="text-primary">R$ {{ pedido.valor_total|floatformat:2 }}</strong>
+                        </div>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Dica:</strong> Verifique a disponibilidade da transportadora antes de confirmar.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Configurar data mínima para hoje
+    var hoje = new Date().toISOString().split('T')[0];
+    document.getElementById('data_entrega').setAttribute('min', hoje);
+    
+    // Configurar horário padrão
+    var agora = new Date();
+    var horas = String(agora.getHours() + 1).padStart(2, '0');
+    var minutos = String(agora.getMinutes()).padStart(2, '0');
+    document.getElementById('hora_entrega').value = horas + ':' + minutos;
+});
+</script>
+{% endblock %}

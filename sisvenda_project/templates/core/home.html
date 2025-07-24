@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}SisVenda - Sistema de Vendas{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="text-center mb-5">
+                <h1 class="display-4 text-primary">
+                    <i class="fas fa-shopping-cart me-3"></i>
+                    SisVenda
+                </h1>
+                <p class="lead text-muted">Sistema de Gestão de Vendas</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-user-tie fa-3x text-primary mb-3"></i>
+                            <h5 class="card-title">Promotores de Vendas</h5>
+                            <p class="card-text">Gerencie seus clientes, registre pedidos e acompanhe suas comissões.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-users fa-3x text-success mb-3"></i>
+                            <h5 class="card-title">Clientes</h5>
+                            <p class="card-text">Acompanhe seus pedidos e receba notificações sobre o andamento.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-warehouse fa-3x text-warning mb-3"></i>
+                            <h5 class="card-title">Gerente de Estoque</h5>
+                            <p class="card-text">Avalie pedidos, programe entregas e controle o estoque.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-chart-line fa-3x text-info mb-3"></i>
+                            <h5 class="card-title">Gerente de Vendas</h5>
+                            <p class="card-text">Analise vendas, aprove pedidos e acompanhe relatórios.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-5">
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg me-3">
+                    <i class="fas fa-sign-in-alt me-2"></i>
+                    Fazer Login
+                </a>
+                <a href="{% url 'register' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-user-plus me-2"></i>
+                    Registrar-se
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Como Funciona o Sistema
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 text-center mb-4">
+                            <div class="p-3 bg-light rounded">
+                                <i class="fas fa-user-plus fa-2x text-primary mb-2"></i>
+                                <h6>1. Cadastro</h6>
+                                <p class="small text-muted">Promotores visitam clientes e registram pedidos</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center mb-4">
+                            <div class="p-3 bg-light rounded">
+                                <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                                <h6>2. Avaliação</h6>
+                                <p class="small text-muted">Estoque e vendas avaliam e aprovam pedidos</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center mb-4">
+                            <div class="p-3 bg-light rounded">
+                                <i class="fas fa-truck fa-2x text-warning mb-2"></i>
+                                <h6>3. Entrega</h6>
+                                <p class="small text-muted">Entregas são programadas e processadas</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center mb-4">
+                            <div class="p-3 bg-light rounded">
+                                <i class="fas fa-star fa-2x text-info mb-2"></i>
+                                <h6>4. Conclusão</h6>
+                                <p class="small text-muted">Pedidos são concluídos e comissões calculadas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

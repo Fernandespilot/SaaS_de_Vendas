@@ -1,0 +1,172 @@
+{% extends 'base_layout.html' %}
+{% load static %}
+
+{% block title %}Dashboard - SisVenda{% endblock %}
+
+{% block content %}
+<!-- Header com botões de ação -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-0">Dashboard</h1>
+        <p class="text-muted mb-0">Visão geral do sistema</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="/pedidos/novo/" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Novo Pedido
+        </a>
+        <button class="btn btn-outline-secondary">
+            <i class="fas fa-download me-2"></i>Exportar
+        </button>
+    </div>
+</div>
+
+<!-- Cards de estatísticas -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card">
+            <div class="card-body text-center">
+                <div class="stat-icon mb-3">
+                    <i class="fas fa-chart-line fa-2x"></i>
+                </div>
+                <h3 class="stat-number">R$ 12.540,00</h3>
+                <p class="stat-label mb-0">Total Vendas</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card success">
+            <div class="card-body text-center">
+                <div class="stat-icon mb-3">
+                    <i class="fas fa-shopping-cart fa-2x"></i>
+                </div>
+                <h3 class="stat-number">45</h3>
+                <p class="stat-label mb-0">Pedidos Hoje</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card warning">
+            <div class="card-body text-center">
+                <div class="stat-icon mb-3">
+                    <i class="fas fa-box fa-2x"></i>
+                </div>
+                <h3 class="stat-number">1.234</h3>
+                <p class="stat-label mb-0">Produtos</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card info">
+            <div class="card-body text-center">
+                <div class="stat-icon mb-3">
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+                <h3 class="stat-number">567</h3>
+                <p class="stat-label mb-0">Clientes</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Conteúdo principal -->
+<div class="row">
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Pedidos Recentes</h5>
+                <a href="/pedidos/" class="btn btn-sm btn-outline-primary">Ver Todos</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Pedido</th>
+                                <th>Cliente</th>
+                                <th>Status</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>#001</strong></td>
+                                <td>João Silva</td>
+                                <td><span class="badge bg-success">Entregue</span></td>
+                                <td><strong>R$ 350,00</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#002</strong></td>
+                                <td>Maria Santos</td>
+                                <td><span class="badge bg-warning">Pendente</span></td>
+                                <td><strong>R$ 220,00</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#003</strong></td>
+                                <td>Pedro Oliveira</td>
+                                <td><span class="badge bg-info">Processando</span></td>
+                                <td><strong>R$ 180,00</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Ações Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="/produtos/" class="btn btn-primary">
+                        <i class="fas fa-box me-2"></i>Ver Produtos
+                    </a>
+                    <a href="/pedidos/" class="btn btn-success">
+                        <i class="fas fa-shopping-cart me-2"></i>Ver Pedidos
+                    </a>
+                    <a href="/relatorios/" class="btn btn-info">
+                        <i class="fas fa-chart-bar me-2"></i>Relatórios
+                    </a>
+                    <a href="/usuarios/" class="btn btn-warning">
+                        <i class="fas fa-users me-2"></i>Usuários
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.stat-card {
+    color: white;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.stat-icon {
+    opacity: 0.8;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,305 @@
+{% extends 'base_layout.html' %}
+
+{% block title %}Dashboard Promotor - SisVenda{% endblock %}
+
+{% block content %}
+<!-- Cabeçalho do Dashboard -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-0">Dashboard Promotor</h1>
+        <p class="text-muted mb-0">Acompanhe suas vendas e metas</p>
+    </div>
+    <div>
+        <span class="badge bg-success fs-6">Promotor</span>
+    </div>
+</div>
+
+<!-- Métricas do Promotor -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Vendas do Mês
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">R$ 0,00</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Pedidos do Mês
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Meus Clientes
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-users fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Meta do Mês
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">R$ 10.000</div>
+                        <div class="progress progress-sm">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-target fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráfico de Performance -->
+<div class="row mb-4">
+    <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Minhas Vendas - Últimos 6 Meses</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-area">
+                    <canvas id="graficoVendasPromotor" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ranking e Metas -->
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Ranking de Promotores</h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <i class="fas fa-trophy fa-3x text-warning"></i>
+                    <h4 class="mt-2">Sua Posição</h4>
+                    <h2 class="text-primary">#1</h2>
+                    <p class="text-muted">de 3 promotores</p>
+                </div>
+                <div class="list-group">
+                    <div class="list-group-item d-flex justify-content-between align-items-center active">
+                        <div>
+                            <strong>Você</strong>
+                            <br><small>R$ 0,00</small>
+                        </div>
+                        <span class="badge bg-warning rounded-pill">1º</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            Promotor 2
+                            <br><small>R$ 0,00</small>
+                        </div>
+                        <span class="badge bg-secondary rounded-pill">2º</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            Promotor 3
+                            <br><small>R$ 0,00</small>
+                        </div>
+                        <span class="badge bg-light text-dark rounded-pill">3º</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ações Rápidas -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Ações Rápidas</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'pedidos:novo' %}" class="btn btn-success w-100">
+                            <i class="fas fa-plus-circle mb-2"></i><br>
+                            Novo Pedido
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'usuarios:cadastrar_cliente' %}" class="btn btn-primary w-100">
+                            <i class="fas fa-user-plus mb-2"></i><br>
+                            Cadastrar Cliente
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'pedidos:listar' %}" class="btn btn-info w-100">
+                            <i class="fas fa-list mb-2"></i><br>
+                            Meus Pedidos
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'usuarios:listar_clientes' %}" class="btn btn-warning w-100">
+                            <i class="fas fa-users mb-2"></i><br>
+                            Meus Clientes
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Últimos Pedidos e Próximas Tarefas -->
+<div class="row">
+    <div class="col-lg-8 mb-4">
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Meus Últimos Pedidos</h6>
+                <a href="{% url 'pedidos:listar' %}" class="btn btn-sm btn-primary">Ver Todos</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Pedido</th>
+                                <th>Cliente</th>
+                                <th>Data</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    <i class="fas fa-shopping-cart fa-2x mb-2"></i><br>
+                                    Nenhum pedido encontrado
+                                    <br>
+                                    <a href="{% url 'pedidos:novo' %}" class="btn btn-primary btn-sm mt-2">
+                                        <i class="fas fa-plus me-2"></i>Criar Primeiro Pedido
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Lembretes</h6>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item border-0 px-0">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <i class="fas fa-calendar-check text-success"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Meta do Mês</h6>
+                                <p class="mb-1">Faltam R$ 10.000 para atingir sua meta</p>
+                                <small class="text-muted">{{ today|date:"F Y" }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-group-item border-0 px-0">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <i class="fas fa-phone text-info"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Contatos Pendentes</h6>
+                                <p class="mb-1">Nenhum cliente para contatar hoje</p>
+                                <small class="text-muted">Atualize regularmente</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-group-item border-0 px-0">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <i class="fas fa-chart-line text-warning"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Performance</h6>
+                                <p class="mb-1">Continue assim! Ótimo trabalho este mês</p>
+                                <small class="text-muted">Mantenha o ritmo</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.border-left-primary {
+    border-left: 0.25rem solid #4e73df !important;
+}
+.border-left-success {
+    border-left: 0.25rem solid #1cc88a !important;
+}
+.border-left-info {
+    border-left: 0.25rem solid #36b9cc !important;
+}
+.border-left-warning {
+    border-left: 0.25rem solid #f6c23e !important;
+}
+.text-xs {
+    font-size: 0.7rem;
+}
+.progress-sm {
+    height: 0.5rem;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Aqui virão os scripts dos gráficos específicos do promotor
+    console.log('Dashboard do promotor carregado');
+});
+</script>
+{% endblock %}

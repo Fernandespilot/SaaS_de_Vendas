@@ -1,0 +1,139 @@
+{% extends 'base_layout.html' %}
+
+{% block title %}Relatório de Vendas - SisVenda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-0">Relatório de Vendas</h1>
+        <p class="text-muted mb-0">Análise de vendas e performance</p>
+    </div>
+    <div>
+        <a href="{% url 'relatorios:dashboard' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Voltar
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Filtros -->
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Filtros</h6>
+            </div>
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Data Inicial</label>
+                        <input type="date" name="data_inicial" class="form-control" value="{{ filtros.data_inicial|default:'' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Data Final</label>
+                        <input type="date" name="data_final" class="form-control" value="{{ filtros.data_final|default:'' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Status</label>
+                        <select name="status" class="form-select">
+                            <option value="">Todos</option>
+                            <option value="pendente" {% if filtros.status == 'pendente' %}selected{% endif %}>Pendente</option>
+                            <option value="aprovado" {% if filtros.status == 'aprovado' %}selected{% endif %}>Aprovado</option>
+                            <option value="entregue" {% if filtros.status == 'entregue' %}selected{% endif %}>Entregue</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-filter me-2"></i>Filtrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resumo -->
+    <div class="col-md-3 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title text-primary">Total de Vendas</h5>
+                <h3 class="mb-0">R$ 0,00</h3>
+                <small class="text-muted">Período selecionado</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title text-success">Pedidos Entregues</h5>
+                <h3 class="mb-0">0</h3>
+                <small class="text-muted">Total de pedidos</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title text-warning">Pedidos Pendentes</h5>
+                <h3 class="mb-0">0</h3>
+                <small class="text-muted">Aguardando aprovação</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title text-info">Ticket Médio</h5>
+                <h3 class="mb-0">R$ 0,00</h3>
+                <small class="text-muted">Valor médio por pedido</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico -->
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Vendas por Período</h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center py-5">
+                    <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Gráfico de vendas será implementado em versão futura</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Vendas -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Detalhamento de Vendas</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Pedido</th>
+                                <th>Cliente</th>
+                                <th>Data</th>
+                                <th>Status</th>
+                                <th class="text-end">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    <i class="fas fa-inbox fa-2x mb-3"></i>
+                                    <br>Nenhuma venda encontrada para os filtros selecionados
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

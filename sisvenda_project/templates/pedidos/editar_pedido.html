@@ -1,0 +1,97 @@
+{% extends 'base_layout.html' %}
+
+{% block title %}Editar Pedido #{{ pedido.id }} - SisVenda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-0">Editar Pedido #{{ pedido.id }}</h1>
+        <p class="text-muted mb-0">Modificar informações do pedido</p>
+    </div>
+    <div>
+        <a href="{% url 'pedidos:ver' pedido.id %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Voltar
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Informações do Pedido</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Cliente</label>
+                            <input type="text" class="form-control" value="{{ pedido.cliente.user.get_full_name }}" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Data do Pedido</label>
+                            <input type="text" class="form-control" value="{{ pedido.data_pedido|date:'d/m/Y' }}" readonly>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-select">
+                                <option value="pendente" {% if pedido.status == 'pendente' %}selected{% endif %}>Pendente</option>
+                                <option value="aprovado" {% if pedido.status == 'aprovado' %}selected{% endif %}>Aprovado</option>
+                                <option value="rejeitado" {% if pedido.status == 'rejeitado' %}selected{% endif %}>Rejeitado</option>
+                                <option value="entregue" {% if pedido.status == 'entregue' %}selected{% endif %}>Entregue</option>
+                                <option value="cancelado" {% if pedido.status == 'cancelado' %}selected{% endif %}>Cancelado</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Valor Total</label>
+                            <input type="text" class="form-control" value="R$ {{ pedido.valor_total|floatformat:2 }}" readonly>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Observações</label>
+                        <textarea name="observacoes" class="form-control" rows="3" placeholder="Observações sobre o pedido...">{{ pedido.observacoes|default:'' }}</textarea>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="{% url 'pedidos:ver' pedido.id %}" class="btn btn-outline-secondary me-md-2">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Salvar Alterações
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Itens do Pedido</h6>
+            </div>
+            <div class="card-body">
+                {% for item in pedido.itens.all %}
+                <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                    <div>
+                        <div class="fw-bold">{{ item.produto.nome }}</div>
+                        <small class="text-muted">Qtd: {{ item.quantidade }} x R$ {{ item.preco_unitario|floatformat:2 }}</small>
+                    </div>
+                    <div class="text-end">
+                        <span class="fw-bold">R$ {{ item.subtotal|floatformat:2 }}</span>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted">Nenhum item no pedido</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

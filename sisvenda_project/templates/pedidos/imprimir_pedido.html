@@ -1,0 +1,182 @@
+{% extends 'base_layout.html' %}
+
+{% block title %}Imprimir Pedido #{{ pedido.id }} - SisVenda{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4 d-print-none">
+        <div>
+            <h1 class="h3 mb-0">Imprimir Pedido #{{ pedido.id }}</h1>
+            <p class="text-muted mb-0">Versão para impressão do pedido</p>
+        </div>
+        <div>
+            <button onclick="window.print()" class="btn btn-primary me-2">
+                <i class="fas fa-print me-2"></i>Imprimir
+            </button>
+            <a href="{% url 'pedidos:ver' pedido.id %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Voltar
+            </a>
+        </div>
+    </div>
+
+    <!-- Cabeçalho da Empresa -->
+    <div class="text-center mb-4">
+        <h2 class="mb-1">SisVenda</h2>
+        <p class="text-muted mb-0">Sistema de Gestão de Vendas</p>
+        <hr>
+    </div>
+
+    <!-- Informações do Pedido -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h5>Informações do Pedido</h5>
+            <table class="table table-borderless">
+                <tr>
+                    <td><strong>Número:</strong></td>
+                    <td>#{{ pedido.id }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Data:</strong></td>
+                    <td>{{ pedido.data_pedido|date:"d/m/Y" }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Status:</strong></td>
+                    <td>
+                        <span class="badge 
+                            {% if pedido.status == 'pendente' %}bg-warning
+                            {% elif pedido.status == 'aprovado' %}bg-success
+                            {% elif pedido.status == 'rejeitado' %}bg-danger
+                            {% elif pedido.status == 'entregue' %}bg-info
+                            {% else %}bg-secondary{% endif %}">
+                            {{ pedido.get_status_display }}
+                        </span>
+                    </td>
+                </tr>
+                {% if pedido.observacoes %}
+                <tr>
+                    <td><strong>Observações:</strong></td>
+                    <td>{{ pedido.observacoes }}</td>
+                </tr>
+                {% endif %}
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h5>Informações do Cliente</h5>
+            <table class="table table-borderless">
+                <tr>
+                    <td><strong>Nome:</strong></td>
+                    <td>{{ pedido.cliente.user.get_full_name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Email:</strong></td>
+                    <td>{{ pedido.cliente.user.email }}</td>
+                </tr>
+                {% if pedido.cliente.user.telefone %}
+                <tr>
+                    <td><strong>Telefone:</strong></td>
+                    <td>{{ pedido.cliente.user.telefone }}</td>
+                </tr>
+                {% endif %}
+                {% if pedido.cliente.municipio %}
+                <tr>
+                    <td><strong>Município:</strong></td>
+                    <td>{{ pedido.cliente.municipio }}</td>
+                </tr>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+
+    <!-- Itens do Pedido -->
+    <div class="mb-4">
+        <h5>Itens do Pedido</h5>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Produto</th>
+                        <th>Descrição</th>
+                        <th class="text-end">Quantidade</th>
+                        <th class="text-end">Preço Unit.</th>
+                        <th class="text-end">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in pedido.itens.all %}
+                    <tr>
+                        <td>{{ item.produto.nome }}</td>
+                        <td>{{ item.produto.descricao|truncatechars:50 }}</td>
+                        <td class="text-end">{{ item.quantidade }}</td>
+                        <td class="text-end">R$ {{ item.preco_unitario|floatformat:2 }}</td>
+                        <td class="text-end">R$ {{ item.subtotal|floatformat:2 }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">Nenhum item encontrado</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="table-light">
+                    <tr>
+                        <th colspan="4" class="text-end">Total Geral:</th>
+                        <th class="text-end">R$ {{ pedido.valor_total|floatformat:2 }}</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- Assinaturas -->
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <div class="text-center">
+                <hr style="border-top: 1px solid #000; width: 80%;">
+                <p class="mb-0"><strong>Cliente</strong></p>
+                <p class="text-muted small">{{ pedido.cliente.user.get_full_name }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="text-center">
+                <hr style="border-top: 1px solid #000; width: 80%;">
+                <p class="mb-0"><strong>Responsável</strong></p>
+                {% if pedido.cliente.promotor %}
+                    <p class="text-muted small">{{ pedido.cliente.promotor.user.get_full_name }}</p>
+                {% else %}
+                    <p class="text-muted small">SisVenda</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="text-center mt-4 text-muted small">
+        <p class="mb-0">Este documento foi gerado automaticamente pelo SisVenda em {{ "now"|date:"d/m/Y H:i" }}</p>
+    </div>
+</div>
+
+<style>
+@media print {
+    .d-print-none {
+        display: none !important;
+    }
+    
+    body {
+        font-size: 12px;
+    }
+    
+    .container-fluid {
+        padding: 0;
+    }
+    
+    .table {
+        font-size: 11px;
+    }
+    
+    .badge {
+        color: #000 !important;
+        background-color: #fff !important;
+        border: 1px solid #000 !important;
+    }
+}
+</style>
+{% endblock %}

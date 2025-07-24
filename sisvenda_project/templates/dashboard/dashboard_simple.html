@@ -1,0 +1,141 @@
+{% extends 'base_layout.html' %}
+
+{% block title %}Dashboard - SisVenda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Dashboard</h1>
+    <div class="btn-group">
+        <a href="{% url 'pedidos:novo' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Novo Pedido
+        </a>
+        <button class="btn btn-outline-primary">
+            <i class="fas fa-download me-2"></i>Exportar
+        </button>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Total Vendas</h6>
+                        <h4 class="card-text">R$ 12.540,00</h4>
+                    </div>
+                    <i class="fas fa-chart-line fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Pedidos Hoje</h6>
+                        <h4 class="card-text">45</h4>
+                    </div>
+                    <i class="fas fa-shopping-cart fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Produtos</h6>
+                        <h4 class="card-text">1.234</h4>
+                    </div>
+                    <i class="fas fa-box fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Clientes</h6>
+                        <h4 class="card-text">567</h4>
+                    </div>
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Orders -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Pedidos Recentes</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Pedido</th>
+                                <th>Cliente</th>
+                                <th>Status</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#001</td>
+                                <td>João Silva</td>
+                                <td><span class="badge bg-success">Entregue</span></td>
+                                <td>R$ 350,00</td>
+                            </tr>
+                            <tr>
+                                <td>#002</td>
+                                <td>Maria Santos</td>
+                                <td><span class="badge bg-warning">Pendente</span></td>
+                                <td>R$ 220,00</td>
+                            </tr>
+                            <tr>
+                                <td>#003</td>
+                                <td>Pedro Oliveira</td>
+                                <td><span class="badge bg-info">Processando</span></td>
+                                <td>R$ 180,00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Ações Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'produtos:lista' %}" class="btn btn-primary">
+                        <i class="fas fa-box me-2"></i>Ver Produtos
+                    </a>
+                    <a href="{% url 'pedidos:lista' %}" class="btn btn-success">
+                        <i class="fas fa-shopping-cart me-2"></i>Ver Pedidos
+                    </a>
+                    <a href="{% url 'relatorios:dashboard' %}" class="btn btn-info">
+                        <i class="fas fa-chart-bar me-2"></i>Relatórios
+                    </a>
+                    <a href="/usuarios/" class="btn btn-warning">
+                        <i class="fas fa-users me-2"></i>Usuários
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

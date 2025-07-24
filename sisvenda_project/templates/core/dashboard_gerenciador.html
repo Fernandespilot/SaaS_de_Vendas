@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Gerenciador - SisVenda{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-cog me-2"></i>
+                    Dashboard Gerenciador
+                </h1>
+                <span class="text-muted">Bem-vindo, {{ user.get_full_name }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards de Resumo -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Total de Usuários</h5>
+                            <h3 class="mb-0">{{ total_usuarios }}</h3>
+                        </div>
+                        <div class="text-primary-emphasis">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Promotores Ativos</h5>
+                            <h3 class="mb-0">{{ promotores_ativos }}</h3>
+                        </div>
+                        <div class="text-success-emphasis">
+                            <i class="fas fa-user-tie fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Clientes Ativos</h5>
+                            <h3 class="mb-0">{{ clientes_ativos }}</h3>
+                        </div>
+                        <div class="text-info-emphasis">
+                            <i class="fas fa-user-friends fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Produtos</h5>
+                            <h3 class="mb-0">{{ total_produtos }}</h3>
+                        </div>
+                        <div class="text-warning-emphasis">
+                            <i class="fas fa-box fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estatísticas de Vendas -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Vendas do Mês</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h4 class="text-primary">{{ pedidos_mes }}</h4>
+                                <span class="text-muted">Pedidos</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h4 class="text-success">R$ {{ faturamento_mes|floatformat:2 }}</h4>
+                                <span class="text-muted">Faturamento</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Status dos Pedidos</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="text-center">
+                                <h5 class="text-info">{{ pedidos_pendentes }}</h5>
+                                <small class="text-muted">Pendentes</small>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="text-center">
+                                <h5 class="text-success">{{ pedidos_aprovados }}</h5>
+                                <small class="text-muted">Aprovados</small>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="text-center">
+                                <h5 class="text-warning">{{ pedidos_entregues }}</h5>
+                                <small class="text-muted">Entregues</small>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="text-center">
+                                <h5 class="text-danger">{{ pedidos_cancelados }}</h5>
+                                <small class="text-muted">Cancelados</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gestão do Sistema -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Gerenciamento do Sistema</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'admin:index' %}" class="btn btn-primary">
+                                    <i class="fas fa-cog me-2"></i>
+                                    Painel Admin
+                                </a>
+                                <a href="{% url 'relatorios' %}" class="btn btn-info">
+                                    <i class="fas fa-chart-bar me-2"></i>
+                                    Relatórios
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'listar_clientes' %}" class="btn btn-success">
+                                    <i class="fas fa-users me-2"></i>
+                                    Gerenciar Clientes
+                                </a>
+                                <a href="{% url 'listar_produtos' %}" class="btn btn-warning">
+                                    <i class="fas fa-box me-2"></i>
+                                    Gerenciar Produtos
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'listar_pedidos' %}" class="btn btn-info">
+                                    <i class="fas fa-shopping-cart me-2"></i>
+                                    Gerenciar Pedidos
+                                </a>
+                                <a href="{% url 'perfil' %}" class="btn btn-secondary">
+                                    <i class="fas fa-user me-2"></i>
+                                    Meu Perfil
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Atividades Recentes -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Pedidos Recentes</h5>
+                </div>
+                <div class="card-body">
+                    {% if pedidos_recentes %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Cliente</th>
+                                        <th>Promotor</th>
+                                        <th>Valor</th>
+                                        <th>Status</th>
+                                        <th>Data</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for pedido in pedidos_recentes %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'detalhar_pedido' pedido.id %}" class="text-decoration-none">
+                                                {{ pedido.codigo }}
+                                            </a>
+                                        </td>
+                                        <td>{{ pedido.cliente.user.get_full_name }}</td>
+                                        <td>{{ pedido.promotor.user.get_full_name }}</td>
+                                        <td>R$ {{ pedido.valor_total|floatformat:2 }}</td>
+                                        <td>
+                                            {% if pedido.status == 'pendente' %}
+                                                <span class="badge bg-warning">{{ pedido.get_status_display }}</span>
+                                            {% elif pedido.status == 'aprovado' %}
+                                                <span class="badge bg-success">{{ pedido.get_status_display }}</span>
+                                            {% elif pedido.status == 'entregue' %}
+                                                <span class="badge bg-info">{{ pedido.get_status_display }}</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">{{ pedido.get_status_display }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ pedido.data_pedido|date:"d/m/Y" }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Nenhum pedido recente</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Alertas do Sistema</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Produtos com Estoque Baixo:</strong> {{ produtos_estoque_baixo }}
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Pedidos Pendentes:</strong> {{ pedidos_pendentes }}
+                    </div>
+                    {% if clientes_bloqueados > 0 %}
+                    <div class="alert alert-danger">
+                        <i class="fas fa-ban me-2"></i>
+                        <strong>Clientes Bloqueados:</strong> {{ clientes_bloqueados }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

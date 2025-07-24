@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Avaliar Pedido - Estoque - SisVenda{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-box me-2"></i>
+                    Avaliar Pedido - Estoque
+                </h1>
+                <a href="{% url 'listar_pedidos' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>
+                    Voltar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Informações do Pedido -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Informações do Pedido</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Código:</strong> {{ pedido.codigo }}</p>
+                            <p><strong>Data:</strong> {{ pedido.data_pedido|date:"d/m/Y H:i" }}</p>
+                            <p><strong>Cliente:</strong> {{ pedido.cliente.user.get_full_name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Promotor:</strong> {{ pedido.promotor.user.get_full_name }}</p>
+                            <p><strong>Status:</strong> <span class="badge bg-warning">{{ pedido.get_status_display }}</span></p>
+                            <p><strong>Valor Total:</strong> <span class="text-success">R$ {{ pedido.valor_total|floatformat:2 }}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Itens do Pedido -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Itens do Pedido - Verificação de Estoque</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Quantidade</th>
+                                    <th>Estoque</th>
+                                    <th>Status</th>
+                                    <th>Preço Unit.</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in pedido.itens.all %}
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <strong>{{ item.produto.nome }}</strong><br>
+                                                <small class="text-muted">{{ item.produto.codigo }}</small>
+                                            </div>
+                                        </td>
+                                        <td>{{ item.quantidade }}</td>
+                                        <td>{{ item.produto.estoque }}</td>
+                                        <td>
+                                            {% if item.produto.estoque >= item.quantidade %}
+                                                <span class="badge bg-success">Disponível</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Insuficiente</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>R$ {{ item.preco_unitario|floatformat:2 }}</td>
+                                        <td>R$ {{ item.subtotal|floatformat:2 }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="5" class="text-end">Total:</th>
+                                    <th><strong class="text-success">R$ {{ pedido.valor_total|floatformat:2 }}</strong></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Formulário de Avaliação -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Avaliação do Estoque</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="observacoes" class="form-label">Observações</label>
+                            <textarea name="observacoes" id="observacoes" class="form-control" rows="4" 
+                                      placeholder="Adicione observações sobre a avaliação..."></textarea>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Atenção:</strong> Verifique se todos os itens possuem estoque suficiente antes de aprovar.
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" name="acao" value="aprovar" class="btn btn-success">
+                                <i class="fas fa-check me-2"></i>Aprovar Pedido
+                            </button>
+                            <button type="submit" name="acao" value="reprovar" class="btn btn-danger">
+                                <i class="fas fa-times me-2"></i>Reprovar Pedido
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Resumo do Estoque -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Resumo</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Total de Itens:</span>
+                            <strong>{{ pedido.itens.count }}</strong>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Itens Disponíveis:</span>
+                            <strong class="text-success">
+                                {{ pedido.itens.all|length }}
+                            </strong>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Valor Total:</span>
+                            <strong class="text-success">R$ {{ pedido.valor_total|floatformat:2 }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

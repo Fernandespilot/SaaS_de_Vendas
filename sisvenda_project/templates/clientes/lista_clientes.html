@@ -1,0 +1,250 @@
+{% extends 'base_layout.html' %}
+
+{% block title %}Clientes - SisVenda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Clientes</h1>
+    <div class="btn-group">
+        <a href="{% url 'clientes:novo' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Novo Cliente
+        </a>
+        <button class="btn btn-outline-primary" onclick="exportarClientes()">
+            <i class="fas fa-download me-2"></i>Exportar
+        </button>
+    </div>
+</div>
+
+<!-- Filtros e Busca -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" class="form-control" name="search" value="{{ search }}" placeholder="Buscar por nome, documento ou email...">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" name="tipo">
+                    <option value="">Todos os tipos</option>
+                    <option value="F" {% if tipo_filter == 'F' %}selected{% endif %}>Pessoa Física</option>
+                    <option value="J" {% if tipo_filter == 'J' %}selected{% endif %}>Pessoa Jurídica</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" name="status">
+                    <option value="">Todos os status</option>
+                    <option value="ativo" {% if status_filter == 'ativo' %}selected{% endif %}>Ativo</option>
+                    <option value="inativo" {% if status_filter == 'inativo' %}selected{% endif %}>Inativo</option>
+                    <option value="bloqueado" {% if status_filter == 'bloqueado' %}selected{% endif %}>Bloqueado</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-filter me-2"></i>Filtrar
+                </button>
+            </div>
+            <div class="col-md-2">
+                <a href="{% url 'clientes:lista' %}" class="btn btn-outline-secondary w-100">
+                    <i class="fas fa-times me-2"></i>Limpar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Lista de Clientes -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Lista de Clientes</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th width="8%">Código</th>
+                        <th width="25%">Nome</th>
+                        <th width="15%">Documento</th>
+                        <th width="15%">Telefone</th>
+                        <th width="20%">Email</th>
+                        <th width="7%">Tipo</th>
+                        <th width="5%">Status</th>
+                        <th width="5%">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in clientes %}
+                    <tr>
+                        <td><strong>{{ cliente.codigo }}</strong></td>
+                        <td>
+                            <div>
+                                <strong>{{ cliente.nome }}</strong>
+                                {% if cliente.nome_fantasia %}
+                                    <br><small class="text-muted">{{ cliente.nome_fantasia }}</small>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="font-monospace">{{ cliente.documento }}</span>
+                            {% if cliente.rg_ie %}
+                                <br><small class="text-muted">{{ cliente.rg_ie }}</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ cliente.telefone }}
+                            {% if cliente.celular %}
+                                <br><small class="text-muted">{{ cliente.celular }}</small>
+                            {% endif %}
+                        </td>
+                        <td>{{ cliente.email }}</td>
+                        <td>
+                            {% if cliente.tipo_pessoa == 'F' %}
+                                <span class="badge bg-info">PF</span>
+                            {% else %}
+                                <span class="badge bg-warning">PJ</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if cliente.status == 'ativo' %}
+                                <span class="badge bg-success">Ativo</span>
+                            {% elif cliente.status == 'inativo' %}
+                                <span class="badge bg-secondary">Inativo</span>
+                            {% else %}
+                                <span class="badge bg-danger">Bloqueado</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" title="Ver" data-id="{{ cliente.id }}" onclick="verCliente(this.dataset.id)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-warning" title="Editar" data-id="{{ cliente.id }}" onclick="editarCliente(this.dataset.id)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-outline-danger" title="Excluir" data-id="{{ cliente.id }}" onclick="excluirCliente(this.dataset.id)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center">
+                            <div class="py-4">
+                                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">Nenhum cliente cadastrado</p>
+                                <a href="{% url 'clientes:novo' %}" class="btn btn-primary">
+                                    <i class="fas fa-plus me-2"></i>Cadastrar Primeiro Cliente
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Paginação -->
+        {% if clientes.has_other_pages %}
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <div>
+                <small class="text-muted">
+                    Mostrando {{ clientes.start_index }}-{{ clientes.end_index }} de {{ clientes.paginator.count }} clientes
+                </small>
+            </div>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    {% if clientes.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ clientes.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if tipo_filter %}&tipo={{ tipo_filter }}{% endif %}">Anterior</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Anterior</span>
+                        </li>
+                    {% endif %}
+                    
+                    {% for num in clientes.paginator.page_range %}
+                        {% if clientes.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}{% if search %}&search={{ search }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if tipo_filter %}&tipo={{ tipo_filter }}{% endif %}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if clientes.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ clientes.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if tipo_filter %}&tipo={{ tipo_filter }}{% endif %}">Próximo</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Próximo</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function verCliente(id) {
+    window.location.href = `{% url 'clientes:ver' 999 %}`.replace('999', id);
+}
+
+function editarCliente(id) {
+    window.location.href = `{% url 'clientes:editar' 999 %}`.replace('999', id);
+}
+
+function excluirCliente(id) {
+    if (confirm('Tem certeza que deseja excluir este cliente? Esta ação não pode ser desfeita.')) {
+        fetch(`{% url 'clientes:excluir' 999 %}`.replace('999', id), {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message || 'Cliente excluído com sucesso!');
+                location.reload();
+            } else {
+                alert('Erro ao excluir cliente: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Erro ao excluir cliente');
+        });
+    }
+}
+
+function exportarClientes() {
+    alert('Exportação em desenvolvimento...');
+}
+
+// Função para obter CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

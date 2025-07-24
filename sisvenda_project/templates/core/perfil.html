@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Perfil do Usuário - SisVenda{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-user me-2"></i>
+                    Meu Perfil
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Informações Pessoais -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Informações Pessoais</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'perfil' %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="first_name" class="form-label">Nome</label>
+                                    <input type="text" name="first_name" id="first_name" class="form-control" 
+                                           value="{{ user.first_name }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="last_name" class="form-label">Sobrenome</label>
+                                    <input type="text" name="last_name" id="last_name" class="form-control" 
+                                           value="{{ user.last_name }}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" name="email" id="email" class="form-control" 
+                                           value="{{ user.email }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="telefone" class="form-label">Telefone</label>
+                                    <input type="tel" name="telefone" id="telefone" class="form-control" 
+                                           value="{{ user.telefone|default:'' }}" placeholder="(11) 99999-9999">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="cpf" class="form-label">CPF</label>
+                                    <input type="text" name="cpf" id="cpf" class="form-control" 
+                                           value="{{ user.cpf|default:'' }}" placeholder="000.000.000-00">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="data_nascimento" class="form-label">Data de Nascimento</label>
+                                    <input type="date" name="data_nascimento" id="data_nascimento" class="form-control" 
+                                           value="{{ user.data_nascimento|date:'Y-m-d' }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="endereco" class="form-label">Endereço</label>
+                            <textarea name="endereco" id="endereco" class="form-control" rows="3">{{ user.endereco|default:'' }}</textarea>
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" name="acao" value="atualizar_perfil" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Salvar Alterações
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Alterar Senha -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Alterar Senha</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'perfil' %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="senha_atual" class="form-label">Senha Atual</label>
+                                    <input type="password" name="senha_atual" id="senha_atual" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="nova_senha" class="form-label">Nova Senha</label>
+                                    <input type="password" name="nova_senha" id="nova_senha" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="confirmar_senha" class="form-label">Confirmar Nova Senha</label>
+                                    <input type="password" name="confirmar_senha" id="confirmar_senha" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" name="acao" value="alterar_senha" class="btn btn-warning">
+                                <i class="fas fa-key me-2"></i>Alterar Senha
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Informações do Sistema -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Informações do Sistema</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Tipo de Usuário:</span>
+                            <strong>
+                                {% if user.tipo_usuario == 'promotor' %}
+                                    <span class="badge bg-primary">Promotor de Vendas</span>
+                                {% elif user.tipo_usuario == 'cliente' %}
+                                    <span class="badge bg-success">Cliente</span>
+                                {% elif user.tipo_usuario == 'gerente_estoque' %}
+                                    <span class="badge bg-info">Gerente de Estoque</span>
+                                {% elif user.tipo_usuario == 'gerente_vendas' %}
+                                    <span class="badge bg-warning">Gerente de Vendas</span>
+                                {% elif user.tipo_usuario == 'gerenciador' %}
+                                    <span class="badge bg-danger">Gerenciador</span>
+                                {% endif %}
+                            </strong>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Status:</span>
+                            <strong>
+                                {% if user.is_active %}
+                                    <span class="badge bg-success">Ativo</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Inativo</span>
+                                {% endif %}
+                            </strong>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Data de Cadastro:</span>
+                            <strong>{{ user.date_joined|date:"d/m/Y" }}</strong>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Último Login:</span>
+                            <strong>{{ user.last_login|date:"d/m/Y H:i"|default:"Nunca" }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informações Específicas -->
+            {% if user.tipo_usuario == 'promotor' %}
+                {% if user.promotor %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Informações do Promotor</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Comissão:</span>
+                                <strong>{{ user.promotor.comissao|floatformat:2 }}%</strong>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Região:</span>
+                                <strong>{{ user.promotor.municipio.nome|default:"Não definida" }}</strong>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Meta Mensal:</span>
+                                <strong>R$ {{ user.promotor.meta_mensal|floatformat:2|default:"0,00" }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% elif user.tipo_usuario == 'cliente' %}
+                {% if user.cliente %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Informações do Cliente</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Limite de Crédito:</span>
+                                <strong>R$ {{ user.cliente.limite_credito|floatformat:2 }}</strong>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Status Financeiro:</span>
+                                <strong>
+                                    {% if user.cliente.status_financeiro == 'aprovado' %}
+                                        <span class="badge bg-success">Aprovado</span>
+                                    {% elif user.cliente.status_financeiro == 'pendente' %}
+                                        <span class="badge bg-warning">Pendente</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Reprovado</span>
+                                    {% endif %}
+                                </strong>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Município:</span>
+                                <strong>{{ user.cliente.municipio.nome|default:"Não definido" }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endif %}
+
+            <!-- Estatísticas -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Estatísticas</h5>
+                </div>
+                <div class="card-body">
+                    {% if user.tipo_usuario == 'promotor' %}
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Pedidos Este Mês:</span>
+                                <strong>{{ estatisticas.pedidos_mes|default:0 }}</strong>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Comissão Este Mês:</span>
+                                <strong>R$ {{ estatisticas.comissao_mes|floatformat:2|default:"0,00" }}</strong>
+                            </div>
+                        </div>
+                    {% elif user.tipo_usuario == 'cliente' %}
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Pedidos Realizados:</span>
+                                <strong>{{ estatisticas.total_pedidos|default:0 }}</strong>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Valor Total Comprado:</span>
+                                <strong>R$ {{ estatisticas.valor_total|floatformat:2|default:"0,00" }}</strong>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Máscara para CPF
+document.getElementById('cpf').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    value = value.replace(/(\d{3})(\d)/, '$1.$2');
+    value = value.replace(/(\d{3})(\d)/, '$1.$2');
+    value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    e.target.value = value;
+});
+
+// Máscara para telefone
+document.getElementById('telefone').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    value = value.replace(/(\d{2})(\d)/, '($1) $2');
+    value = value.replace(/(\d)(\d{4})$/, '$1-$2');
+    e.target.value = value;
+});
+
+// Validação de senha
+document.querySelector('form').addEventListener('submit', function(e) {
+    const novaSenha = document.getElementById('nova_senha').value;
+    const confirmarSenha = document.getElementById('confirmar_senha').value;
+    
+    if (novaSenha && novaSenha !== confirmarSenha) {
+        e.preventDefault();
+        alert('As senhas não coincidem!');
+    }
+});
+</script>
+{% endblock %}

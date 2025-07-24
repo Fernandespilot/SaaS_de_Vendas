@@ -1,0 +1,286 @@
+{% extends 'base_layout.html' %}
+
+{% block title %}Relatórios - SisVenda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Relatórios</h1>
+    <div class="btn-group">
+        <button class="btn btn-primary" onclick="gerarRelatorio()">
+            <i class="fas fa-chart-bar me-2"></i>Gerar Relatório
+        </button>
+        <button class="btn btn-outline-primary" onclick="exportarRelatorios()">
+            <i class="fas fa-download me-2"></i>Exportar
+        </button>
+    </div>
+</div>
+
+<!-- Filtros de Período -->
+<div class="card mb-4">
+    <div class="card-body">
+        <h6 class="card-title">Filtros de Período</h6>
+        <div class="row">
+            <div class="col-md-3">
+                <label class="form-label">Data Início</label>
+                <input type="date" class="form-control" id="dataInicio" value="2024-01-01">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Data Fim</label>
+                <input type="date" class="form-control" id="dataFim" value="2024-01-31">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Tipo de Relatório</label>
+                <select class="form-select" id="tipoRelatorio">
+                    <option value="vendas">Vendas</option>
+                    <option value="produtos">Produtos</option>
+                    <option value="clientes">Clientes</option>
+                    <option value="financeiro">Financeiro</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button class="btn btn-primary w-100" onclick="aplicarFiltros()">
+                    <i class="fas fa-filter me-2"></i>Aplicar Filtros
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Estatísticas Gerais -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-2x mb-2"></i>
+                <h4>R$ 45.780,00</h4>
+                <p class="mb-0">Vendas do Mês</p>
+                <small class="text-success">+12% vs mês anterior</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card success">
+            <div class="card-body text-center">
+                <i class="fas fa-shopping-cart fa-2x mb-2"></i>
+                <h4>156</h4>
+                <p class="mb-0">Pedidos</p>
+                <small class="text-success">+8% vs mês anterior</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card warning">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-2x mb-2"></i>
+                <h4>89</h4>
+                <p class="mb-0">Novos Clientes</p>
+                <small class="text-warning">-5% vs mês anterior</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card info">
+            <div class="card-body text-center">
+                <i class="fas fa-box fa-2x mb-2"></i>
+                <h4>1.234</h4>
+                <p class="mb-0">Produtos Vendidos</p>
+                <small class="text-info">+15% vs mês anterior</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Gráfico de Vendas -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Vendas por Período</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="vendasChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Top Produtos -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Top 5 Produtos</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Smartphone Samsung</strong>
+                            <br><small class="text-muted">25 vendas</small>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">R$ 32.497,50</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Notebook Dell</strong>
+                            <br><small class="text-muted">15 vendas</small>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">R$ 37.498,50</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Tablet Apple</strong>
+                            <br><small class="text-muted">12 vendas</small>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">R$ 34.798,80</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Tênis Nike</strong>
+                            <br><small class="text-muted">30 vendas</small>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">R$ 11.997,00</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Camiseta Polo</strong>
+                            <br><small class="text-muted">45 vendas</small>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">R$ 4.045,50</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabela de Vendas Detalhadas -->
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Vendas Detalhadas do Período</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Pedidos</th>
+                        <th>Itens Vendidos</th>
+                        <th>Faturamento</th>
+                        <th>Ticket Médio</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>15/01/2024</td>
+                        <td>12</td>
+                        <td>45</td>
+                        <td>R$ 3.450,00</td>
+                        <td>R$ 287,50</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="verDetalhes('2024-01-15')">
+                                <i class="fas fa-eye"></i> Ver Detalhes
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>14/01/2024</td>
+                        <td>8</td>
+                        <td>28</td>
+                        <td>R$ 2.180,00</td>
+                        <td>R$ 272,50</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="verDetalhes('2024-01-14')">
+                                <i class="fas fa-eye"></i> Ver Detalhes
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>13/01/2024</td>
+                        <td>15</td>
+                        <td>52</td>
+                        <td>R$ 4.890,00</td>
+                        <td>R$ 326,00</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="verDetalhes('2024-01-13')">
+                                <i class="fas fa-eye"></i> Ver Detalhes
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>12/01/2024</td>
+                        <td>18</td>
+                        <td>67</td>
+                        <td>R$ 5.670,00</td>
+                        <td>R$ 315,00</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="verDetalhes('2024-01-12')">
+                                <i class="fas fa-eye"></i> Ver Detalhes
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Gráfico de vendas
+const ctx = document.getElementById('vendasChart').getContext('2d');
+const vendasChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['01/01', '05/01', '10/01', '15/01', '20/01', '25/01', '30/01'],
+        datasets: [{
+            label: 'Vendas (R$)',
+            data: [1200, 1900, 3000, 5000, 3500, 4200, 4800],
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+            tension: 0.4,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return 'R$ ' + value.toLocaleString();
+                    }
+                }
+            }
+        }
+    }
+});
+
+function gerarRelatorio() {
+    alert('Gerando relatório personalizado...');
+}
+
+function exportarRelatorios() {
+    alert('Exportando relatórios em PDF...');
+}
+
+function aplicarFiltros() {
+    const dataInicio = document.getElementById('dataInicio').value;
+    const dataFim = document.getElementById('dataFim').value;
+    const tipo = document.getElementById('tipoRelatorio').value;
+    
+    alert(`Aplicando filtros:\nPeríodo: ${dataInicio} até ${dataFim}\nTipo: ${tipo}`);
+}
+
+function verDetalhes(data) {
+    alert(`Ver detalhes do dia ${data}`);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends 'base_layout.html' %}
+
+{% block title %}{{ cliente.nome }} - SisVenda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ cliente.nome }}</h1>
+    <div class="btn-group">
+        <a href="{% url 'clientes:editar' cliente.id %}" class="btn btn-warning">
+            <i class="fas fa-edit me-2"></i>Editar
+        </a>
+        <a href="{% url 'clientes:lista' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Voltar
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Informações Básicas -->
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Informações Básicas</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Código:</strong> {{ cliente.codigo }}</p>
+                        <p><strong>Nome:</strong> {{ cliente.nome }}</p>
+                        {% if cliente.nome_fantasia %}
+                        <p><strong>Nome Fantasia:</strong> {{ cliente.nome_fantasia }}</p>
+                        {% endif %}
+                        <p><strong>Tipo:</strong> {{ cliente.tipo_pessoa_display }}</p>
+                        <p><strong>Documento:</strong> {{ cliente.documento }}</p>
+                        {% if cliente.rg_ie %}
+                        <p><strong>{% if cliente.tipo_pessoa == 'F' %}RG{% else %}Inscrição Estadual{% endif %}:</strong> {{ cliente.rg_ie }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Email:</strong> {{ cliente.email }}</p>
+                        <p><strong>Telefone:</strong> {{ cliente.telefone }}</p>
+                        {% if cliente.celular %}
+                        <p><strong>Celular:</strong> {{ cliente.celular }}</p>
+                        {% endif %}
+                        {% if cliente.data_nascimento %}
+                        <p><strong>Data de Nascimento:</strong> {{ cliente.data_nascimento|date:"d/m/Y" }}</p>
+                        {% endif %}
+                        <p><strong>Data de Cadastro:</strong> {{ cliente.data_cadastro|date:"d/m/Y H:i" }}</p>
+                        <p><strong>Última Atualização:</strong> {{ cliente.data_atualizacao|date:"d/m/Y H:i" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Endereço -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Endereço</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>CEP:</strong> {{ cliente.cep }}</p>
+                <p><strong>Endereço:</strong> {{ cliente.endereco }}, {{ cliente.numero }}</p>
+                {% if cliente.complemento %}
+                <p><strong>Complemento:</strong> {{ cliente.complemento }}</p>
+                {% endif %}
+                <p><strong>Bairro:</strong> {{ cliente.bairro }}</p>
+                <p><strong>Cidade/Estado:</strong> {{ cliente.cidade }}/{{ cliente.estado }}</p>
+            </div>
+        </div>
+
+        <!-- Observações -->
+        {% if cliente.observacoes %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Observações</h5>
+            </div>
+            <div class="card-body">
+                <p>{{ cliente.observacoes|linebreaks }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Dados Comerciais -->
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Status</h5>
+            </div>
+            <div class="card-body text-center">
+                {% if cliente.status == 'ativo' %}
+                    <span class="badge bg-success fs-6">Ativo</span>
+                {% elif cliente.status == 'inativo' %}
+                    <span class="badge bg-secondary fs-6">Inativo</span>
+                {% else %}
+                    <span class="badge bg-danger fs-6">Bloqueado</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Dados Comerciais</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Limite de Crédito:</strong><br>R$ {{ cliente.limite_credito|floatformat:2 }}</p>
+                <p><strong>Desconto Padrão:</strong><br>{{ cliente.desconto_padrao|floatformat:2 }}%</p>
+            </div>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Estatísticas</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Total de Pedidos:</strong> 0</p>
+                <p><strong>Valor Total:</strong> R$ 0,00</p>
+                <p><strong>Último Pedido:</strong> -</p>
+                <small class="text-muted">* Dados em desenvolvimento</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Histórico de Pedidos -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Histórico de Pedidos</h5>
+    </div>
+    <div class="card-body">
+        <div class="text-center py-4">
+            <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+            <p class="text-muted">Nenhum pedido encontrado</p>
+            <small class="text-muted">Funcionalidade em desenvolvimento</small>
+        </div>
+    </div>
+</div>
+{% endblock %}

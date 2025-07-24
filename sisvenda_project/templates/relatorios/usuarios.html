@@ -1,0 +1,205 @@
+{% extends 'base_layout.html' %}
+
+{% block title %}Relatório de Usuários - SisVenda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-0">Relatório de Usuários</h1>
+        <p class="text-muted mb-0">Gestão de usuários e promotores</p>
+    </div>
+    <div>
+        <a href="{% url 'relatorios:dashboard' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Voltar
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Resumo de Usuários -->
+    <div class="col-md-3 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title text-primary">Total de Usuários</h5>
+                <h3 class="mb-0">0</h3>
+                <small class="text-muted">Usuários cadastrados</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title text-success">Promotores</h5>
+                <h3 class="mb-0">0</h3>
+                <small class="text-muted">Promotores ativos</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title text-info">Clientes</h5>
+                <h3 class="mb-0">0</h3>
+                <small class="text-muted">Clientes cadastrados</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title text-warning">Administradores</h5>
+                <h3 class="mb-0">1</h3>
+                <small class="text-muted">Admins do sistema</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Filtros</h6>
+            </div>
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Tipo de Usuário</label>
+                        <select name="tipo" class="form-select">
+                            <option value="">Todos</option>
+                            <option value="admin">Administradores</option>
+                            <option value="promotor">Promotores</option>
+                            <option value="cliente">Clientes</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Status</label>
+                        <select name="status" class="form-select">
+                            <option value="">Todos</option>
+                            <option value="ativo">Ativo</option>
+                            <option value="inativo">Inativo</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Data de Cadastro</label>
+                        <input type="date" name="data" class="form-control">
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-filter me-2"></i>Filtrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Usuários -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Lista de Usuários</h6>
+                <div>
+                    <a href="{% url 'usuarios:cadastrar_promotor' %}" class="btn btn-sm btn-success me-2">
+                        <i class="fas fa-user-tie me-2"></i>Novo Promotor
+                    </a>
+                    <a href="{% url 'usuarios:cadastrar_cliente' %}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-user-plus me-2"></i>Novo Cliente
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Tipo</th>
+                                <th>Status</th>
+                                <th>Data Cadastro</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if user.is_authenticated %}
+                            <tr>
+                                <td>
+                                    <strong>{{ user.get_full_name|default:user.username }}</strong>
+                                    {% if user.is_superuser %}
+                                    <br><small class="text-muted">Superusuário</small>
+                                    {% endif %}
+                                </td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    <span class="badge bg-danger">Administrador</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success">Ativo</span>
+                                </td>
+                                <td>{{ user.date_joined|date:"d/m/Y" }}</td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-outline-primary" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    <i class="fas fa-users fa-2x mb-3"></i>
+                                    <br>Carregue mais usuários aqui
+                                    <br>
+                                    <small>Use os filtros acima para buscar usuários específicos</small>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Detalhes do Usuário -->
+<div class="modal fade" id="detalhesUsuarioModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes do Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6"><strong>Nome:</strong></div>
+                    <div class="col-6" id="modalNome">-</div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6"><strong>Email:</strong></div>
+                    <div class="col-6" id="modalEmail">-</div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6"><strong>Tipo:</strong></div>
+                    <div class="col-6" id="modalTipo">-</div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6"><strong>Data de Cadastro:</strong></div>
+                    <div class="col-6" id="modalDataCadastro">-</div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6"><strong>Último Login:</strong></div>
+                    <div class="col-6" id="modalUltimoLogin">-</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary">Editar Usuário</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

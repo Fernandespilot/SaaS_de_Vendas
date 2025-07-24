@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos - SisVenda</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .main-content {
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/dashboard/">
+                <i class="fas fa-chart-line me-2"></i>SisVenda
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/dashboard/">Dashboard</a>
+                <a class="nav-link" href="/produtos/">Produtos</a>
+                <a class="nav-link" href="/pedidos/">Pedidos</a>
+                <a class="nav-link" href="/relatorios/">Relatórios</a>
+                <a class="nav-link" href="{% url 'logout' %}">Sair</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid main-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Produtos</h1>
+            <button class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Novo Produto
+            </button>
+        </div>
+
+        <div class="row">
+            {% if produtos %}
+                {% for produto in produtos %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ produto.nome }}</h5>
+                            <p class="card-text">{{ produto.descricao|default:"Sem descrição" }}</p>
+                            <p class="text-muted">Estoque: {{ produto.estoque|default:"0" }} unidades</p>
+                            <p class="text-success">R$ {{ produto.preco|default:"0.00" }}</p>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-primary">Ver</button>
+                                <button class="btn btn-sm btn-outline-warning">Editar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Produto Exemplo A</h5>
+                            <p class="card-text">Descrição do produto A</p>
+                            <p class="text-muted">Estoque: 50 unidades</p>
+                            <p class="text-success">R$ 25,00</p>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-primary">Ver</button>
+                                <button class="btn btn-sm btn-outline-warning">Editar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Produto Exemplo B</h5>
+                            <p class="card-text">Descrição do produto B</p>
+                            <p class="text-muted">Estoque: 30 unidades</p>
+                            <p class="text-success">R$ 15,00</p>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-primary">Ver</button>
+                                <button class="btn btn-sm btn-outline-warning">Editar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Produto Exemplo C</h5>
+                            <p class="card-text">Descrição do produto C</p>
+                            <p class="text-muted">Estoque: 20 unidades</p>
+                            <p class="text-success">R$ 40,00</p>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-primary">Ver</button>
+                                <button class="btn btn-sm btn-outline-warning">Editar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+{% extends 'base_layout.html' %}
+
+{% block title %}Editar Cliente - SisVenda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Editar Cliente</h1>
+    <div class="btn-group">
+        <a href="{% url 'clientes:ver' cliente.id %}" class="btn btn-outline-secondary">
+            <i class="fas fa-eye me-2"></i>Visualizar
+        </a>
+        <a href="{% url 'clientes:lista' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Voltar
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Editar Informações do Cliente</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" id="clienteForm">
+            {% csrf_token %}
+            
+            <!-- Tipo de Pessoa -->
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <label class="form-label">Tipo de Pessoa *</label>
+                    <div class="btn-group w-100" role="group">
+                        <input type="radio" class="btn-check" name="tipo_pessoa" id="pf" value="F" {% if cliente.tipo_pessoa == 'F' %}checked{% endif %}>
+                        <label class="btn btn-outline-primary" for="pf">
+                            <i class="fas fa-user me-2"></i>Pessoa Física
+                        </label>
+                        <input type="radio" class="btn-check" name="tipo_pessoa" id="pj" value="J" {% if cliente.tipo_pessoa == 'J' %}checked{% endif %}>
+                        <label class="btn btn-outline-primary" for="pj">
+                            <i class="fas fa-building me-2"></i>Pessoa Jurídica
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dados Básicos -->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome/Razão Social *</label>
+                        <input type="text" class="form-control" id="nome" name="nome" value="{{ cliente.nome }}" required>
+                    </div>
+                </div>
+                <div class="col-md-4" id="nome_fantasia_div" {% if cliente.tipo_pessoa == 'F' %}style="display: none;"{% endif %}>
+                    <div class="mb-3">
+                        <label for="nome_fantasia" class="form-label">Nome Fantasia</label>
+                        <input type="text" class="form-control" id="nome_fantasia" name="nome_fantasia" value="{{ cliente.nome_fantasia }}">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="documento" class="form-label" id="documento_label">{% if cliente.tipo_pessoa == 'F' %}CPF{% else %}CNPJ{% endif %} *</label>
+                        <input type="text" class="form-control" id="documento" name="documento" value="{{ cliente.documento }}" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="rg_ie" class="form-label" id="rg_ie_label">{% if cliente.tipo_pessoa == 'F' %}RG{% else %}Inscrição Estadual{% endif %}</label>
+                        <input type="text" class="form-control" id="rg_ie" name="rg_ie" value="{{ cliente.rg_ie }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="data_nascimento" class="form-label">Data de Nascimento</label>
+                        <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" value="{{ cliente.data_nascimento|date:'Y-m-d' }}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contato -->
+            <h6 class="border-bottom pb-2 mb-3">Contato</h6>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email *</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ cliente.email }}" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="telefone" class="form-label">Telefone *</label>
+                        <input type="text" class="form-control" id="telefone" name="telefone" value="{{ cliente.telefone }}" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="celular" class="form-label">Celular</label>
+                        <input type="text" class="form-control" id="celular" name="celular" value="{{ cliente.celular }}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Endereço -->
+            <h6 class="border-bottom pb-2 mb-3">Endereço</h6>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label for="cep" class="form-label">CEP *</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="cep" name="cep" value="{{ cliente.cep }}" required>
+                            <button type="button" class="btn btn-outline-secondary" onclick="buscarCep()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="endereco" class="form-label">Endereço *</label>
+                        <input type="text" class="form-control" id="endereco" name="endereco" value="{{ cliente.endereco }}" required>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label for="numero" class="form-label">Número *</label>
+                        <input type="text" class="form-control" id="numero" name="numero" value="{{ cliente.numero }}" required>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label for="complemento" class="form-label">Complemento</label>
+                        <input type="text" class="form-control" id="complemento" name="complemento" value="{{ cliente.complemento }}">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label for="bairro" class="form-label">Bairro *</label>
+                        <input type="text" class="form-control" id="bairro" name="bairro" value="{{ cliente.bairro }}" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="cidade" class="form-label">Cidade *</label>
+                        <input type="text" class="form-control" id="cidade" name="cidade" value="{{ cliente.cidade }}" required>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-3">
+                        <label for="estado" class="form-label">Estado *</label>
+                        <select class="form-select" id="estado" name="estado" required>
+                            <option value="">Selecione</option>
+                            <option value="AC" {% if cliente.estado == 'AC' %}selected{% endif %}>AC</option>
+                            <option value="AL" {% if cliente.estado == 'AL' %}selected{% endif %}>AL</option>
+                            <option value="AP" {% if cliente.estado == 'AP' %}selected{% endif %}>AP</option>
+                            <option value="AM" {% if cliente.estado == 'AM' %}selected{% endif %}>AM</option>
+                            <option value="BA" {% if cliente.estado == 'BA' %}selected{% endif %}>BA</option>
+                            <option value="CE" {% if cliente.estado == 'CE' %}selected{% endif %}>CE</option>
+                            <option value="DF" {% if cliente.estado == 'DF' %}selected{% endif %}>DF</option>
+                            <option value="ES" {% if cliente.estado == 'ES' %}selected{% endif %}>ES</option>
+                            <option value="GO" {% if cliente.estado == 'GO' %}selected{% endif %}>GO</option>
+                            <option value="MA" {% if cliente.estado == 'MA' %}selected{% endif %}>MA</option>
+                            <option value="MT" {% if cliente.estado == 'MT' %}selected{% endif %}>MT</option>
+                            <option value="MS" {% if cliente.estado == 'MS' %}selected{% endif %}>MS</option>
+                            <option value="MG" {% if cliente.estado == 'MG' %}selected{% endif %}>MG</option>
+                            <option value="PA" {% if cliente.estado == 'PA' %}selected{% endif %}>PA</option>
+                            <option value="PB" {% if cliente.estado == 'PB' %}selected{% endif %}>PB</option>
+                            <option value="PR" {% if cliente.estado == 'PR' %}selected{% endif %}>PR</option>
+                            <option value="PE" {% if cliente.estado == 'PE' %}selected{% endif %}>PE</option>
+                            <option value="PI" {% if cliente.estado == 'PI' %}selected{% endif %}>PI</option>
+                            <option value="RJ" {% if cliente.estado == 'RJ' %}selected{% endif %}>RJ</option>
+                            <option value="RN" {% if cliente.estado == 'RN' %}selected{% endif %}>RN</option>
+                            <option value="RS" {% if cliente.estado == 'RS' %}selected{% endif %}>RS</option>
+                            <option value="RO" {% if cliente.estado == 'RO' %}selected{% endif %}>RO</option>
+                            <option value="RR" {% if cliente.estado == 'RR' %}selected{% endif %}>RR</option>
+                            <option value="SC" {% if cliente.estado == 'SC' %}selected{% endif %}>SC</option>
+                            <option value="SP" {% if cliente.estado == 'SP' %}selected{% endif %}>SP</option>
+                            <option value="SE" {% if cliente.estado == 'SE' %}selected{% endif %}>SE</option>
+                            <option value="TO" {% if cliente.estado == 'TO' %}selected{% endif %}>TO</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dados Comerciais -->
+            <h6 class="border-bottom pb-2 mb-3">Dados Comerciais</h6>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label for="limite_credito" class="form-label">Limite de Crédito (R$)</label>
+                        <input type="number" step="0.01" class="form-control" id="limite_credito" name="limite_credito" value="{{ cliente.limite_credito }}">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label for="desconto_padrao" class="form-label">Desconto Padrão (%)</label>
+                        <input type="number" step="0.01" class="form-control" id="desconto_padrao" name="desconto_padrao" value="{{ cliente.desconto_padrao }}" max="100">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="ativo" {% if cliente.status == 'ativo' %}selected{% endif %}>Ativo</option>
+                            <option value="inativo" {% if cliente.status == 'inativo' %}selected{% endif %}>Inativo</option>
+                            <option value="bloqueado" {% if cliente.status == 'bloqueado' %}selected{% endif %}>Bloqueado</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="observacoes" class="form-label">Observações</label>
+                <textarea class="form-control" id="observacoes" name="observacoes" rows="3">{{ cliente.observacoes }}</textarea>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{% url 'clientes:ver' cliente.id %}" class="btn btn-outline-secondary me-md-2">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-2"></i>Salvar Alterações
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Alternar campos baseado no tipo de pessoa
+document.querySelectorAll('input[name="tipo_pessoa"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const isPJ = this.value === 'J';
+        
+        // Mostrar/ocultar nome fantasia
+        document.getElementById('nome_fantasia_div').style.display = isPJ ? 'block' : 'none';
+        
+        // Alterar labels
+        document.getElementById('documento_label').textContent = isPJ ? 'CNPJ *' : 'CPF *';
+        document.getElementById('rg_ie_label').textContent = isPJ ? 'Inscrição Estadual' : 'RG';
+    });
+});
+
+// Buscar CEP
+function buscarCep() {
+    const cep = document.getElementById('cep').value.replace(/\D/g, '');
+    
+    if (cep.length !== 8) {
+        alert('CEP deve ter 8 dígitos');
+        return;
+    }
+    
+    fetch(`{% url 'clientes:buscar_cep' %}?cep=${cep}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('endereco').value = data.endereco;
+                document.getElementById('bairro').value = data.bairro;
+                document.getElementById('cidade').value = data.cidade;
+                document.getElementById('estado').value = data.estado;
+                document.getElementById('numero').focus();
+            } else {
+                alert(data.error || 'Erro ao buscar CEP');
+            }
+        })
+        .catch(error => {
+            alert('Erro ao buscar CEP');
+        });
+}
+
+// Máscaras (código similar ao novo_cliente.html)
+document.getElementById('cep').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    value = value.replace(/(\d{5})(\d)/, '$1-$2');
+    e.target.value = value;
+});
+
+document.getElementById('telefone').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    value = value.replace(/(\d{2})(\d)/, '($1) $2');
+    value = value.replace(/(\d{4})(\d)/, '$1-$2');
+    e.target.value = value;
+});
+
+document.getElementById('celular').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    value = value.replace(/(\d{2})(\d)/, '($1) $2');
+    value = value.replace(/(\d{5})(\d)/, '$1-$2');
+    e.target.value = value;
+});
+
+document.getElementById('documento').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    const isPJ = document.querySelector('input[name="tipo_pessoa"]:checked').value === 'J';
+    
+    if (isPJ) {
+        // CNPJ: 00.000.000/0000-00
+        value = value.replace(/(\d{2})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d)/, '$1/$2');
+        value = value.replace(/(\d{4})(\d)/, '$1-$2');
+    } else {
+        // CPF: 000.000.000-00
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d)/, '$1-$2');
+    }
+    
+    e.target.value = value;
+});
+</script>
+{% endblock %}

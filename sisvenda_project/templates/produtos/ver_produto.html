@@ -1,0 +1,231 @@
+{% extends 'base_layout.html' %}
+
+{% block title %}{{ produto.nome }} - SisVenda{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Detalhes do Produto</h1>
+    <div class="btn-group">
+        <a href="{% url 'produtos:editar' produto.id %}" class="btn btn-warning">
+            <i class="fas fa-edit me-2"></i>Editar
+        </a>
+        <a href="{% url 'produtos:lista' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Voltar
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Imagem do Produto</h5>
+            </div>
+            <div class="card-body text-center">
+                {% if produto.imagem %}
+                    <img src="{{ produto.imagem.url }}" class="img-fluid rounded" alt="{{ produto.nome }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/300x300/2563eb/ffffff?text={{ produto.nome|slice:':2'|upper }}" 
+                         class="img-fluid rounded" alt="{{ produto.nome }}">
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Ações Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'produtos:editar' produto.id %}" class="btn btn-warning">
+                        <i class="fas fa-edit me-2"></i>Editar Produto
+                    </a>
+                    <button class="btn btn-success" onclick="adicionarAoPedido()">
+                        <i class="fas fa-cart-plus me-2"></i>Adicionar ao Pedido
+                    </button>
+                    <button class="btn btn-info" onclick="ajustarEstoque()">
+                        <i class="fas fa-boxes me-2"></i>Ajustar Estoque
+                    </button>
+                    <button class="btn btn-danger" onclick="excluirProduto()">
+                        <i class="fas fa-trash me-2"></i>Excluir Produto
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Informações Gerais</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Nome do Produto</h6>
+                        <p class="lead">{{ produto.nome }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Grupo</h6>
+                        <p><span class="badge bg-primary">{{ produto.grupo.nome|default:"Geral" }}</span></p>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6>Preço</h6>
+                        <p class="h4 text-success">R$ {{ produto.preco_venda|floatformat:2 }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Estoque Atual</h6>
+                        <p class="h5">
+                            {% if produto.estoque > 10 %}
+                                <span class="badge bg-success">{{ produto.estoque }} unid.</span>
+                            {% elif produto.estoque > 0 %}
+                                <span class="badge bg-warning">{{ produto.estoque }} unid.</span>
+                            {% else %}
+                                <span class="badge bg-danger">Esgotado</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Status</h6>
+                        <p>
+                            {% if produto.ativo %}
+                                <span class="badge bg-success">Ativo</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Inativo</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                
+                {% if produto.descricao %}
+                <div class="row">
+                    <div class="col-12">
+                        <h6>Descrição</h6>
+                        <p>{{ produto.descricao }}</p>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Código</h6>
+                        <p>{{ produto.codigo|default:"Não informado" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Unidade</h6>
+                        <p>{{ produto.unidade|default:"UN" }}</p>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Preço de Custo</h6>
+                        <p>R$ {{ produto.preco_custo|floatformat:2|default:"Não informado" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Peso</h6>
+                        <p>{{ produto.peso|default:"Não informado" }}{% if produto.peso %} kg{% endif %}</p>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Data de Criação</h6>
+                        <p>{{ produto.data_criacao|date:"d/m/Y H:i"|default:"Não informado" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Última Atualização</h6>
+                        <p>{{ produto.data_atualizacao|date:"d/m/Y H:i"|default:"Não informado" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Histórico de Movimentações -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Histórico de Vendas</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Pedido</th>
+                                <th>Cliente</th>
+                                <th>Quantidade</th>
+                                <th>Valor Unit.</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dados de exemplo -->
+                            <tr>
+                                <td>15/01/2024</td>
+                                <td>#001</td>
+                                <td>João Silva</td>
+                                <td>1</td>
+                                <td>R$ {{ produto.preco_venda|floatformat:2 }}</td>
+                                <td>R$ {{ produto.preco_venda|floatformat:2 }}</td>
+                            </tr>
+                            <tr>
+                                <td>10/01/2024</td>
+                                <td>#002</td>
+                                <td>Maria Santos</td>
+                                <td>2</td>
+                                <td>R$ {{ produto.preco_venda|floatformat:2 }}</td>
+                                <td>R$ {% widthratio produto.preco_venda 1 2 %}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function adicionarAoPedido() {
+    alert('Funcionalidade em desenvolvimento: Adicionar ao pedido');
+}
+
+function ajustarEstoque() {
+    const novoEstoque = prompt('Digite o novo estoque:');
+    if (novoEstoque !== null && !isNaN(novoEstoque)) {
+        alert('Estoque ajustado para ' + novoEstoque + ' unidades');
+    }
+}
+
+function excluirProduto() {
+    if (confirm('Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.')) {
+        const produtoId = '{{ produto.id }}';
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        fetch("/produtos/" + produtoId + "/excluir/", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Produto excluído com sucesso!');
+                window.location.href = '/produtos/';
+            } else {
+                alert('Erro ao excluir produto: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Erro ao excluir produto');
+        });
+    }
+}
+</script>
+{% endblock %}

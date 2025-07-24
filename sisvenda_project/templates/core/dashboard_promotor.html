@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Promotor - SisVenda{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-user-tie me-2"></i>
+                    Dashboard do Promotor
+                </h1>
+                <span class="badge bg-primary fs-6">
+                    {{ user.get_full_name }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="dashboard-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-2">Clientes na Área</h6>
+                        <div class="number">{{ clientes_area }}</div>
+                    </div>
+                    <div class="text-primary">
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <a href="{% url 'listar_clientes' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-eye me-1"></i>Ver Clientes
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="dashboard-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-2">Pedidos do Mês</h6>
+                        <div class="number">{{ pedidos_mes }}</div>
+                    </div>
+                    <div class="text-success">
+                        <i class="fas fa-shopping-bag fa-2x"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <a href="{% url 'listar_pedidos' %}" class="btn btn-outline-success btn-sm">
+                        <i class="fas fa-eye me-1"></i>Ver Pedidos
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="dashboard-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-2">Comissão do Mês</h6>
+                        <div class="number">R$ {{ comissao_mes|floatformat:2 }}</div>
+                    </div>
+                    <div class="text-warning">
+                        <i class="fas fa-dollar-sign fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="dashboard-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-2">Ações Rápidas</h6>
+                        <div class="text-center">
+                            <a href="{% url 'criar_pedido' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-1"></i>Novo Pedido
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list me-2"></i>
+                        Pedidos Recentes
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-shopping-bag fa-2x mb-3"></i>
+                        <p>Nenhum pedido recente para mostrar.</p>
+                        <a href="{% url 'criar_pedido' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i>Criar Primeiro Pedido
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-map me-2"></i>
+                        Área de Cobertura
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if promotor.municipios_cobertura.all %}
+                        <ul class="list-unstyled">
+                            {% for municipio in promotor.municipios_cobertura.all %}
+                                <li class="mb-2">
+                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                    {{ municipio.nome }} - {{ municipio.estado }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="text-center text-muted">
+                            <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                            <p>Nenhuma área de cobertura definida.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

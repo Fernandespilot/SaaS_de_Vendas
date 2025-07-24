@@ -1,0 +1,338 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pedidos - SisVenda{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="content-header">
+        <h1 class="content-title">
+            <i class="fas fa-shopping-cart"></i>
+            Pedidos
+        </h1>
+        <div class="content-actions">
+            <button class="btn btn-primary" onclick="window.location.href='#'">
+                <i class="fas fa-plus"></i>
+                Novo Pedido
+            </button>
+        </div>
+    </div>
+
+    <div class="content-body">
+        <!-- Estatísticas -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-primary">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stats-content">
+                        <h3>{{ stats.pendentes }}</h3>
+                        <p>Pendentes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-warning">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="stats-content">
+                        <h3>{{ stats.em_avaliacao }}</h3>
+                        <p>Em Avaliação</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-success">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="stats-content">
+                        <h3>{{ stats.aprovados }}</h3>
+                        <p>Aprovados</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-icon bg-info">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="stats-content">
+                        <h3>{{ stats.entregues }}</h3>
+                        <p>Entregues</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Pesquisar</label>
+                            <input type="text" class="form-control" placeholder="Código ou cliente" value="{{ search }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control">
+                                <option value="">Todos os status</option>
+                                <option value="pendente" {% if status_selecionado == 'pendente' %}selected{% endif %}>Pendente</option>
+                                <option value="avaliacao_estoque" {% if status_selecionado == 'avaliacao_estoque' %}selected{% endif %}>Avaliação de Estoque</option>
+                                <option value="avaliacao_vendas" {% if status_selecionado == 'avaliacao_vendas' %}selected{% endif %}>Avaliação de Vendas</option>
+                                <option value="aprovado" {% if status_selecionado == 'aprovado' %}selected{% endif %}>Aprovado</option>
+                                <option value="entregue" {% if status_selecionado == 'entregue' %}selected{% endif %}>Entregue</option>
+                                <option value="cancelado" {% if status_selecionado == 'cancelado' %}selected{% endif %}>Cancelado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Período</label>
+                            <select class="form-control">
+                                <option value="">Todos os períodos</option>
+                                <option value="hoje">Hoje</option>
+                                <option value="7dias">Últimos 7 dias</option>
+                                <option value="30dias">Últimos 30 dias</option>
+                                <option value="90dias">Últimos 90 dias</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <button class="btn btn-secondary btn-block">
+                                <i class="fas fa-search"></i>
+                                Filtrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Pedidos -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Lista de Pedidos</h5>
+                <div class="card-tools">
+                    <span class="badge badge-info">{{ pedidos|length }} pedidos</span>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Cliente</th>
+                                <th>Vendedor</th>
+                                <th>Data</th>
+                                <th>Status</th>
+                                <th>Valor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pedido in pedidos %}
+                            <tr>
+                                <td>
+                                    <strong>{{ pedido.codigo }}</strong>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-avatar">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div class="ml-2">
+                                            <div class="user-name">{{ pedido.usuario.first_name }} {{ pedido.usuario.last_name }}</div>
+                                            <small class="text-muted">{{ pedido.usuario.email }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-light">{{ pedido.vendedor.first_name }}</span>
+                                </td>
+                                <td>
+                                    <div>{{ pedido.data_criacao|date:"d/m/Y" }}</div>
+                                    <small class="text-muted">{{ pedido.data_criacao|date:"H:i" }}</small>
+                                </td>
+                                <td>
+                                    {% if pedido.status == 'pendente' %}
+                                    <span class="badge badge-warning">Pendente</span>
+                                    {% elif pedido.status == 'avaliacao_estoque' %}
+                                    <span class="badge badge-info">Avaliação Estoque</span>
+                                    {% elif pedido.status == 'avaliacao_vendas' %}
+                                    <span class="badge badge-info">Avaliação Vendas</span>
+                                    {% elif pedido.status == 'aprovado' %}
+                                    <span class="badge badge-success">Aprovado</span>
+                                    {% elif pedido.status == 'entregue' %}
+                                    <span class="badge badge-primary">Entregue</span>
+                                    {% elif pedido.status == 'cancelado' %}
+                                    <span class="badge badge-danger">Cancelado</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong class="text-success">R$ {{ pedido.valor_total|floatformat:2 }}</strong>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-sm btn-outline-primary" title="Detalhes">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-info" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        {% if pedido.pode_ser_cancelado %}
+                                        <button class="btn btn-sm btn-outline-danger" title="Cancelar">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center py-4">
+                                    <div class="empty-state">
+                                        <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                                        <h5 class="text-muted">Nenhum pedido encontrado</h5>
+                                        <p class="text-muted">Crie o primeiro pedido para começar</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paginação -->
+        {% if pedidos.has_other_pages %}
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if pedidos.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ pedidos.previous_page_number }}">&laquo;</a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in pedidos.paginator.page_range %}
+                    {% if pedidos.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% if pedidos.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ pedidos.next_page_number }}">&raquo;</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.stats-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stats-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+}
+
+.stats-content h3 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.stats-content p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: var(--color-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.user-name {
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.empty-state {
+    padding: 2rem;
+}
+
+.badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.table td {
+    vertical-align: middle;
+    border-top: 1px solid var(--color-border);
+}
+
+.table thead th {
+    border-bottom: 2px solid var(--color-border);
+    background: var(--color-surface);
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.btn-group .btn {
+    border-radius: 4px;
+    margin-right: 2px;
+}
+
+.btn-group .btn:last-child {
+    margin-right: 0;
+}
+
+.bg-primary { background: var(--color-primary) !important; }
+.bg-warning { background: var(--color-warning) !important; }
+.bg-success { background: var(--color-success) !important; }
+.bg-info { background: var(--color-info) !important; }
+</style>
+{% endblock %}

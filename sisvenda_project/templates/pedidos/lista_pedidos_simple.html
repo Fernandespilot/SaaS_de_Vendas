@@ -1,0 +1,324 @@
+{% extends 'base_layout.html' %}
+
+{% block title %}Pedidos - SisVenda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Pedidos</h1>
+    <div class="btn-group">
+        <a href="{% url 'pedidos:novo' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Novo Pedido
+        </a>
+        <button class="btn btn-outline-primary" onclick="exportarPedidos()">
+            <i class="fas fa-download me-2"></i>Exportar
+        </button>
+    </div>
+</div>
+
+<!-- Filtros e Busca -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" class="form-control" placeholder="Buscar pedidos..." id="searchInput">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" id="statusFilter">
+                    <option value="">Todos os status</option>
+                    <option value="pendente">Pendente</option>
+                    <option value="processando">Processando</option>
+                    <option value="enviado">Enviado</option>
+                    <option value="entregue">Entregue</option>
+                    <option value="cancelado">Cancelado</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="date" class="form-control" id="dataInicio" placeholder="Data início">
+            </div>
+            <div class="col-md-2">
+                <input type="date" class="form-control" id="dataFim" placeholder="Data fim">
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" id="vendedorFilter">
+                    <option value="">Todos vendedores</option>
+                    <option value="joao">João Silva</option>
+                    <option value="maria">Maria Santos</option>
+                    <option value="pedro">Pedro Oliveira</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-outline-secondary w-100" onclick="limparFiltros()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Resumo -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body text-center">
+                <i class="fas fa-shopping-cart fa-2x mb-2"></i>
+                <h4>45</h4>
+                <p class="mb-0">Total Pedidos</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card warning">
+            <div class="card-body text-center">
+                <i class="fas fa-clock fa-2x mb-2"></i>
+                <h4>12</h4>
+                <p class="mb-0">Pendentes</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card success">
+            <div class="card-body text-center">
+                <i class="fas fa-check-circle fa-2x mb-2"></i>
+                <h4>28</h4>
+                <p class="mb-0">Entregues</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card info">
+            <div class="card-body text-center">
+                <i class="fas fa-dollar-sign fa-2x mb-2"></i>
+                <h4>R$ 12.540</h4>
+                <p class="mb-0">Faturamento</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lista de Pedidos -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Lista de Pedidos</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th width="8%">Pedido</th>
+                        <th width="20%">Cliente</th>
+                        <th width="15%">Data</th>
+                        <th width="10%">Itens</th>
+                        <th width="12%">Valor</th>
+                        <th width="10%">Status</th>
+                        <th width="15%">Vendedor</th>
+                        <th width="10%">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>#001</strong></td>
+                        <td>
+                            <div>
+                                <strong>João Silva</strong>
+                                <br><small class="text-muted">joao@email.com</small>
+                            </div>
+                        </td>
+                        <td>15/01/2024<br><small class="text-muted">14:30</small></td>
+                        <td>3 itens</td>
+                        <td>R$ 1.299,90</td>
+                        <td>
+                            <span class="badge bg-success">Entregue</span>
+                        </td>
+                        <td>Maria Santos</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" title="Ver" onclick="verPedido(1)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-warning" title="Editar" onclick="editarPedido(1)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-outline-info" title="Imprimir" onclick="imprimirPedido(1)">
+                                    <i class="fas fa-print"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>#002</strong></td>
+                        <td>
+                            <div>
+                                <strong>Maria Santos</strong>
+                                <br><small class="text-muted">maria@email.com</small>
+                            </div>
+                        </td>
+                        <td>14/01/2024<br><small class="text-muted">16:45</small></td>
+                        <td>1 item</td>
+                        <td>R$ 2.499,90</td>
+                        <td>
+                            <span class="badge bg-warning">Pendente</span>
+                        </td>
+                        <td>João Silva</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" title="Ver" onclick="verPedido(2)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-warning" title="Editar" onclick="editarPedido(2)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-outline-info" title="Imprimir" onclick="imprimirPedido(2)">
+                                    <i class="fas fa-print"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>#003</strong></td>
+                        <td>
+                            <div>
+                                <strong>Pedro Oliveira</strong>
+                                <br><small class="text-muted">pedro@email.com</small>
+                            </div>
+                        </td>
+                        <td>13/01/2024<br><small class="text-muted">09:15</small></td>
+                        <td>5 itens</td>
+                        <td>R$ 899,90</td>
+                        <td>
+                            <span class="badge bg-info">Processando</span>
+                        </td>
+                        <td>Pedro Oliveira</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" title="Ver" onclick="verPedido(3)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-warning" title="Editar" onclick="editarPedido(3)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-outline-info" title="Imprimir" onclick="imprimirPedido(3)">
+                                    <i class="fas fa-print"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>#004</strong></td>
+                        <td>
+                            <div>
+                                <strong>Ana Costa</strong>
+                                <br><small class="text-muted">ana@email.com</small>
+                            </div>
+                        </td>
+                        <td>12/01/2024<br><small class="text-muted">11:20</small></td>
+                        <td>2 itens</td>
+                        <td>R$ 749,80</td>
+                        <td>
+                            <span class="badge bg-primary">Enviado</span>
+                        </td>
+                        <td>Maria Santos</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" title="Ver" onclick="verPedido(4)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-warning" title="Editar" onclick="editarPedido(4)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-outline-info" title="Imprimir" onclick="imprimirPedido(4)">
+                                    <i class="fas fa-print"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>#005</strong></td>
+                        <td>
+                            <div>
+                                <strong>Carlos Mendes</strong>
+                                <br><small class="text-muted">carlos@email.com</small>
+                            </div>
+                        </td>
+                        <td>11/01/2024<br><small class="text-muted">15:30</small></td>
+                        <td>1 item</td>
+                        <td>R$ 399,90</td>
+                        <td>
+                            <span class="badge bg-danger">Cancelado</span>
+                        </td>
+                        <td>João Silva</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" title="Ver" onclick="verPedido(5)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-warning" title="Editar" onclick="editarPedido(5)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-outline-info" title="Imprimir" onclick="imprimirPedido(5)">
+                                    <i class="fas fa-print"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Paginação -->
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <div>
+                <small class="text-muted">Mostrando 1-5 de 45 pedidos</small>
+            </div>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item disabled">
+                        <span class="page-link">Anterior</span>
+                    </li>
+                    <li class="page-item active">
+                        <span class="page-link">1</span>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">2</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">3</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Próximo</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<script>
+function verPedido(id) {
+    window.location.href = `{% url 'pedidos:ver' 0 %}`.replace('0', id);
+}
+
+function editarPedido(id) {
+    window.location.href = `{% url 'pedidos:editar' 0 %}`.replace('0', id);
+}
+
+function imprimirPedido(id) {
+    window.open(`{% url 'pedidos:imprimir' 0 %}`.replace('0', id), '_blank');
+}
+
+function exportarPedidos() {
+    alert('Exportação em desenvolvimento...');
+}
+
+function limparFiltros() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('statusFilter').value = '';
+    document.getElementById('dataInicio').value = '';
+    document.getElementById('dataFim').value = '';
+    document.getElementById('vendedorFilter').value = '';
+}
+</script>
+{% endblock %}

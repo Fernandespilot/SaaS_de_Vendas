@@ -1,0 +1,43 @@
+{% extends 'dashboard/dashboard_simple.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Produtos</h1>
+    <button class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Novo Produto
+    </button>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Produto A</h5>
+                <p class="card-text">Descrição do produto A</p>
+                <p class="text-muted">Estoque: 50 unidades</p>
+                <p class="text-success">R$ 25,00</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Produto B</h5>
+                <p class="card-text">Descrição do produto B</p>
+                <p class="text-muted">Estoque: 30 unidades</p>
+                <p class="text-success">R$ 15,00</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Produto C</h5>
+                <p class="card-text">Descrição do produto C</p>
+                <p class="text-muted">Estoque: 20 unidades</p>
+                <p class="text-success">R$ 40,00</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

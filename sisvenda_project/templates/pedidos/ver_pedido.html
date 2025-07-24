@@ -1,0 +1,278 @@
+{% extends 'base_layout.html' %}
+
+{% block title %}Pedido {{ pedido.codigo }} - SisVenda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Pedido {{ pedido.codigo }}</h1>
+    <div class="btn-group">
+        <a href="{% url 'pedidos:editar' pedido.id %}" class="btn btn-warning">
+            <i class="fas fa-edit me-2"></i>Editar
+        </a>
+        <button class="btn btn-info" onclick="imprimirPedido()">
+            <i class="fas fa-print me-2"></i>Imprimir
+        </button>
+        <a href="{% url 'pedidos:lista' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Voltar
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Informações do Pedido -->
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Informações do Pedido</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Código:</strong> {{ pedido.codigo }}</p>
+                        <p><strong>Vendedor:</strong> {{ pedido.vendedor.get_full_name|default:pedido.vendedor.username }}</p>
+                        <p><strong>Data de Criação:</strong> {{ pedido.data_criacao|date:"d/m/Y H:i" }}</p>
+                        {% if pedido.data_entrega %}
+                        <p><strong>Data de Entrega:</strong> {{ pedido.data_entrega|date:"d/m/Y" }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Status:</strong> 
+                            {% if pedido.status == 'pendente' %}
+                                <span class="badge bg-warning">Pendente</span>
+                            {% elif pedido.status == 'aprovado' %}
+                                <span class="badge bg-success">Aprovado</span>
+                            {% elif pedido.status == 'entregue' %}
+                                <span class="badge bg-primary">Entregue</span>
+                            {% elif pedido.status == 'cancelado' %}
+                                <span class="badge bg-danger">Cancelado</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ pedido.get_status_display }}</span>
+                            {% endif %}
+                        </p>
+                        <p><strong>Valor Total:</strong> R$ {{ pedido.valor_total|floatformat:2 }}</p>
+                        <p><strong>Última Atualização:</strong> {{ pedido.data_atualizacao|date:"d/m/Y H:i" }}</p>
+                    </div>
+                </div>
+                
+                {% if pedido.observacoes %}
+                <div class="mt-3">
+                    <strong>Observações:</strong>
+                    <p class="mt-2">{{ pedido.observacoes|linebreaks }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Itens do Pedido -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Itens do Pedido</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th width="40%">Produto</th>
+                                <th width="15%">Quantidade</th>
+                                <th width="15%">Preço Unit.</th>
+                                <th width="15%">Subtotal</th>
+                                <th width="15%">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in pedido.itens.all %}
+                            <tr>
+                                <td>
+                                    <strong>{{ item.produto.nome }}</strong>
+                                    <br><small class="text-muted">Código: {{ item.produto.codigo }}</small>
+                                </td>
+                                <td>{{ item.quantidade }}</td>
+                                <td>R$ {{ item.preco_unitario|floatformat:2 }}</td>
+                                <td>R$ {{ item.subtotal|floatformat:2 }}</td>
+                                <td>
+                                    <button class="btn btn-outline-primary btn-sm" title="Ver Produto" onclick="verProduto('{{ item.produto.id }}');">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    <div class="py-3">
+                                        <i class="fas fa-box fa-2x text-muted mb-2"></i>
+                                        <p class="text-muted">Nenhum item no pedido</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        {% if pedido.itens.all %}
+                        <tfoot>
+                            <tr class="table-info">
+                                <th colspan="3">Total do Pedido:</th>
+                                <th>R$ {{ pedido.valor_total|floatformat:2 }}</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Painel Lateral -->
+    <div class="col-md-4">
+        <!-- Status e Ações -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Status e Ações</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Alterar Status</label>
+                    <select class="form-select" id="status_select">
+                        {% for status_code, status_name in pedido.STATUS_CHOICES %}
+                        <option value="{{ status_code }}" {% if pedido.status == status_code %}selected{% endif %}>
+                            {{ status_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button class="btn btn-primary w-100 mb-2" onclick="atualizarStatus()">
+                    <i class="fas fa-sync me-2"></i>Atualizar Status
+                </button>
+                
+                {% if pedido.pode_ser_cancelado %}
+                <button class="btn btn-danger w-100" onclick="cancelarPedido()">
+                    <i class="fas fa-times me-2"></i>Cancelar Pedido
+                </button>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Resumo Financeiro -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Resumo Financeiro</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Subtotal:</span>
+                    <span>R$ {{ pedido.valor_total|floatformat:2 }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Desconto:</span>
+                    <span>R$ 0,00</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <strong>Total:</strong>
+                    <strong>R$ {{ pedido.valor_total|floatformat:2 }}</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Histórico -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Histórico</h6>
+            </div>
+            <div class="card-body">
+                {% for historico in pedido.historico.all|slice:":5" %}
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <small class="text-muted">{{ historico.data_mudanca|date:"d/m H:i" }}</small>
+                        <br>
+                        <span class="badge bg-info">{{ historico.get_status_novo_display }}</span>
+                    </div>
+                    <small class="text-muted">{{ historico.usuario.username }}</small>
+                </div>
+                {% empty %}
+                <small class="text-muted">Nenhum histórico disponível</small>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function verProduto(produtoId) {
+    window.location.href = '/produtos/' + produtoId + '/';
+}
+
+function atualizarStatus() {
+    const novoStatus = document.getElementById('status_select').value;
+    const pedidoId = '{{ pedido.id }}';
+    
+    if (confirm('Tem certeza que deseja alterar o status do pedido?')) {
+        fetch("{% url 'pedidos:editar' pedido.id %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'status=' + novoStatus
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Erro ao atualizar status');
+            }
+        })
+        .catch(error => {
+            alert('Erro ao atualizar status');
+        });
+    }
+}
+
+function cancelarPedido() {
+    if (confirm('Tem certeza que deseja cancelar este pedido? Esta ação não pode ser desfeita.')) {
+        atualizarStatusPara('cancelado');
+    }
+}
+
+function atualizarStatusPara(status) {
+    fetch("{% url 'pedidos:editar' pedido.id %}", {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'status=' + status
+    })
+    .then(response => {
+        if (response.ok) {
+            location.reload();
+        } else {
+            alert('Erro ao atualizar status');
+        }
+    })
+    .catch(error => {
+        alert('Erro ao atualizar status');
+    });
+}
+
+function imprimirPedido() {
+    window.open("{% url 'pedidos:imprimir' pedido.id %}", '_blank');
+}
+
+// Função para obter CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}
