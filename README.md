@@ -6,7 +6,7 @@
 
 Sistema completo de Gestão de Vendas desenvolvido para facilitar a venda de produtos, gerenciar promotores e gerar relatórios. Este repositório contém toda a documentação e o desenvolvimento do sistema proposto na disciplina **Análise e Projeto de Sistemas Computacionais**, no período 2025/1.
 
-![Dashboard](documents/img/dashboard-screen.jpg)
+![Dashboard](documents/img/menu.png)
 
 ---
 
@@ -55,13 +55,13 @@ Este projeto foi desenvolvido como parte da disciplina **Análise e Projeto de S
 ## Interfaces e Screenshots
 
 ### Tela de Login
-![Tela de Login](documents/img/login-screen.jpg)
+![Tela de Login](documents/img/tela.png
 
 ### Dashboard Principal
-![Dashboard](documents/img/dashboard-screen.jpg)
+![Dashboard](documents/img/menu.png)
 
 ### Relatórios e Gráficos
-![Relatórios](documents/img/relatorios-screen.jpg)
+![Relatórios](documents/img/pedidos.png)
 
 ### Interface Mobile
 <p align="center">
