@@ -1,86 +1,102 @@
-# SisVenda - Sistema de Vendas 
+# SisVenda - Sistema de Vendas
 
-Este repositório contém a documentação e o desenvolvimento do sistema proposto na disciplina **Análise e Projeto de Sistemas Computacionais**, no período 2025/1.
-
-## 📑 Índice
-
-- [🏢 Visão Geral](#-visão-geral)
-- [📘 Story](#-story)
-- [🧩 Modelo Conceitual DER](#-modelo-conceitual-der)
-- [🔷 Modelo Conceitual Orientado a Objetos (OO)](#-modelo-conceitual-orientado-a-objetos-oo)
-- [🗂️ Diagrama de Casos de Uso](#-diagrama-de-casos-de-uso)
+Sistema de Gestão de Vendas desenvolvido para facilitar a venda de produtos, gerenciar promotores e gerar relatórios. Este repositório contém toda a documentação e o desenvolvimento do sistema proposto na disciplina **Análise e Projeto de Sistemas Computacionais**, no período 2025/1.
 
 ---
-## 🏢 Visão Geral
-A **Empresa X** atua no setor de vendas de materiais eletroeletrônicos por meio de **catálogos impressos**, distribuídos via correio com o apoio de uma equipe de **promotores de venda**. Esses promotores visitam clientes em suas respectivas **áreas de cobertura (municípios)** com o objetivo de divulgar produtos, registrar pedidos e, assim, aumentar suas comissões — calculadas com base no volume de compras dos clientes.
 
-O sistema tem como objetivo **automatizar e gerenciar** esse processo, desde o **cadastro de promotores, clientes e produtos**, até o **registro, avaliação, entrega e acompanhamento de pedidos**. Ele também fornece **relatórios** para o controle de vendas, estoques e comissões.
+## Índice
 
-A operação se dá da seguinte forma:
+- [Visão Geral](#visão-geral)
+- [Visão de Produto](#visão-de-produto)
+- [Sobre o Projeto](#sobre-o-projeto)
+- [Objetivos do Produto](#objetivos-do-produto)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Story](#story)
+- [Como executar o projeto](#como-executar-o-projeto)
 
- 1. **O promotor de vendas** visualiza sua lista de clientes, registra novos pedidos e acompanha suas comissões.
-
- 2. **Os pedidos realizados** são enviados à empresa, onde passam por:
-   - **Verificação de estoque** feita pelo gerente de estoque.
-   - **Análise financeira do cliente** realizada pelo gerente de vendas, que aprova ou cancela o pedido.
-   - Em caso de aprovação, é feita a **programação da entrega**, com reserva e baixa do estoque.
-   - No dia da entrega, o pedido é **processado e finalizado**.
-
- 3. **Os clientes** podem acompanhar seus pedidos e recebem notificações sobre o andamento.
-
- 4. **Os gerentes de vendas e de estoque** têm acesso a **relatórios detalhados** para controle e tomada de decisões.
- 
 ---
-## 📘 Story
 
-As histórias de usuário (User Stories) do sistema estão detalhadas no arquivo [user-storys.md](document/user-storys.md). Lá você encontrará a descrição completa das funcionalidades do sistema na perspectiva dos diferentes usuários:
+## Visão Geral
 
+A **Empresa X** atua no setor de vendas de materiais eletroeletrônicos por meio de **catálogos impressos**, distribuídos via correio com o apoio de uma equipe de **promotores de venda**.
+
+O sistema visa **automatizar e gerenciar** esse processo, do cadastro ao acompanhamento dos pedidos, promovendo maior eficiência operacional.
+
+---
+
+## Visão de Produto
+
+O **SisVenda** é um sistema de vendas completo, desenvolvido para lojas que desejam gerenciar operações de forma digital, com foco em eficiência e controle.
+
+Principais recursos:
+- Gerenciamento de produtos, clientes e vendedores
+- Registro e acompanhamento de pedidos
+- Controle de estoques e comissões
+- Geração de relatórios financeiros
+- Interface simples e intuitiva para diferentes usuários
+
+---
+
+## Sobre o Projeto
+
+Este projeto foi desenvolvido como parte da disciplina **Análise e Projeto de Sistemas Computacionais (2025/1)** com o objetivo de consolidar conceitos de modelagem de sistemas, UML, padrões de projeto e implementação web.
+
+---
+
+## Objetivos do Produto
+
+- Automatizar o controle de entrada e saída de produtos
+- Gerenciar clientes e vendedores de forma eficiente
+- Facilitar a geração de relatórios financeiros e operacionais
+- Oferecer interface simples e interativa para diferentes perfis de usuário
+
+---
+
+## Tecnologias Utilizadas
+
+| Ferramenta           | Finalidade                                              |
+|-----------------------|--------------------------------------------------------|
+| Python 3.11           | Linguagem principal                                     |
+| Django 4.2            | Framework web principal                                 |
+| PostgreSQL            | Banco de dados principal                                |
+| HTML + CSS            | Interface administrativa                                |
+| Mermaid Chart         | Diagrama de Entidade Relacionamento (DER)               |
+| Lucidchart            | Diagrama de casos de uso e modelos orientados a objetos |
+| pip                   | Gerenciador de pacotes Python                           |
+| Virtualenv            | Isolamento de ambiente                                  |
+| Git/GitHub            | Controle de versão                                      |
+| VSCode                | Editor de código recomendado                            |
+| Docker (planejado)    | Containerização futura para implantação                 |
+
+---
+
+## Story
+
+As histórias de usuário estão organizadas no [Quadro de Projetos do GitHub](https://github.com/orgs/APS25-1/projects/3/views/1), onde é possível acompanhar visualmente o progresso, os cards de funcionalidades e o fluxo de trabalho por status.
+
+**Perfis de usuários contemplados:**
 - Promotor de vendas
 - Cliente
-- Gerenciador
-- Gerente de estoque
 - Gerente de vendas
+- Gerente de estoque
 
 ---
 
-## 🧩 Modelo Conceitual DER
+## Como executar o projeto
 
-```mermaid
-erDiagram
-    CLIENTE ||--o{ PEDIDO : FAZ
-    CLIENTE }o--|| MUNICIPIO : RESIDE
-    CLIENTE ||--|{ PROMOTOR_VENDA : ATENDIDO_POR
-    PROMOTOR_VENDA ||--|{ MUNICIPIO : COBRE
-    PROMOTOR_VENDA ||--o{ PEDIDO : REGISTRA
-    PEDIDO ||--o{ ITEM_PEDIDO : CONTÉM
-    ITEM_PEDIDO }|--|| PRODUTO : REFERE
-    PRODUTO ||--|| GRUPO_PRODUTO : PERTENCE
-```
+```bash
+# Clone o repositório
+git clone https://github.com/usuario/sisvenda.git
 
-### Modelo Lógico
-![Diagrama Entidade Relacionamento Lógico](document/img/der-logico.jpg)
+# Crie o ambiente virtual
+python -m venv venv
 
----
+# Ative o ambiente virtual
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate     # Windows
 
-## 🔷 [Modelo Conceitual Orientado a Objetos (OO)](https://lucid.app/lucidchart/3ab6d960-81c9-46d6-b9e2-7b98e5dd0f45/edit?viewport_loc=-769%2C-109%2C3511%2C1748%2COaRhBAe6IYM9&invitationId=inv_eaf0bf03-8ad6-41cd-bfa8-1bc1b8b04ea0)
+# Instale as dependências
+pip install -r requirements.txt
 
-> Apresente o modelo conceitual orientado a objetos, com foco nas classes principais, atributos e relacionamentos.
-
-### Pode incluir:
-- Diagrama de classes UML (imagem)
-- Descrição das classes e responsabilidades
-- Heranças, associações e composições
-- Comentários sobre a coesão e acoplamento
-
----
-
-## 🗂️ Diagrama de Casos de Uso
-
-> Apresente o(s) diagrama(s) de casos de uso que descrevem como os usuários interagem com o sistema.
-
-### Sugestões:
-- Inserir imagem dos casos de uso
-- Listar os atores
-- Descrever cada caso de uso brevemente (em formato de tabela ou lista)
-
----
+# Execute o projeto
+python manage.py runserver
