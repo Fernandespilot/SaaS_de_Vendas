@@ -1,4 +1,89 @@
-<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg">
-  <rect width="100%" height="100%" fill="#f0f0f0"/>
-  <text x="400" y="250" font-family="Arial" font-size="24" text-anchor="middle">Dashboard SisVenda</text>
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="#f8f9fa"/>
+  
+  <!-- Header -->
+  <rect width="100%" height="60" fill="#3498db"/>
+  <text x="30" y="40" font-family="Arial" font-size="24" fill="white" font-weight="bold">SisVenda</text>
+  <text x="1100" y="40" font-family="Arial" font-size="16" fill="white" text-anchor="end">Admin</text>
+  
+  <!-- Sidebar -->
+  <rect x="0" y="60" width="220" height="740" fill="#2c3e50"/>
+  <text x="30" y="100" font-family="Arial" font-size="18" fill="white">Dashboard</text>
+  <text x="30" y="140" font-family="Arial" font-size="18" fill="white">Produtos</text>
+  <text x="30" y="180" font-family="Arial" font-size="18" fill="white">Pedidos</text>
+  <text x="30" y="220" font-family="Arial" font-size="18" fill="white">Clientes</text>
+  <text x="30" y="260" font-family="Arial" font-size="18" fill="white">Relatórios</text>
+  
+  <!-- Main Content -->
+  <rect x="240" y="80" width="940" height="60" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  <text x="260" y="120" font-family="Arial" font-size="24" fill="#333">Dashboard Principal</text>
+  
+  <!-- Statistics Cards -->
+  <rect x="240" y="160" width="280" height="140" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  <text x="260" y="190" font-family="Arial" font-size="18" fill="#666">Pedidos</text>
+  <text x="260" y="240" font-family="Arial" font-size="36" fill="#3498db" font-weight="bold">124</text>
+  <text x="340" y="240" font-family="Arial" font-size="14" fill="#777">últimos 30 dias</text>
+  
+  <rect x="540" y="160" width="280" height="140" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  <text x="560" y="190" font-family="Arial" font-size="18" fill="#666">Vendas</text>
+  <text x="560" y="240" font-family="Arial" font-size="36" fill="#2ecc71" font-weight="bold">R$ 24.590</text>
+  <text x="700" y="240" font-family="Arial" font-size="14" fill="#777">mês atual</text>
+  
+  <rect x="840" y="160" width="280" height="140" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  <text x="860" y="190" font-family="Arial" font-size="18" fill="#666">Clientes</text>
+  <text x="860" y="240" font-family="Arial" font-size="36" fill="#e74c3c" font-weight="bold">47</text>
+  <text x="910" y="240" font-family="Arial" font-size="14" fill="#777">novos este mês</text>
+  
+  <!-- Sales Chart -->
+  <rect x="240" y="320" width="600" height="300" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  <text x="260" y="350" font-family="Arial" font-size="18" fill="#666">Vendas nos Últimos 6 Meses</text>
+  
+  <!-- Chart Lines -->
+  <line x1="260" y1="580" x2="820" y2="580" stroke="#e0e0e0" stroke-width="2"/>
+  <line x1="260" y1="380" x2="260" y2="580" stroke="#e0e0e0" stroke-width="2"/>
+  
+  <!-- Chart Data -->
+  <path d="M280,550 L350,520 L420,540 L490,480 L560,450 L630,470 L700,400 L770,420" fill="none" stroke="#3498db" stroke-width="3"/>
+  <circle cx="280" cy="550" r="5" fill="#3498db"/>
+  <circle cx="350" cy="520" r="5" fill="#3498db"/>
+  <circle cx="420" cy="540" r="5" fill="#3498db"/>
+  <circle cx="490" cy="480" r="5" fill="#3498db"/>
+  <circle cx="560" cy="450" r="5" fill="#3498db"/>
+  <circle cx="630" cy="470" r="5" fill="#3498db"/>
+  <circle cx="700" cy="400" r="5" fill="#3498db"/>
+  <circle cx="770" cy="420" r="5" fill="#3498db"/>
+  
+  <!-- X-Axis Labels -->
+  <text x="280" y="600" font-family="Arial" font-size="12" fill="#666" text-anchor="middle">Jan</text>
+  <text x="350" y="600" font-family="Arial" font-size="12" fill="#666" text-anchor="middle">Fev</text>
+  <text x="420" y="600" font-family="Arial" font-size="12" fill="#666" text-anchor="middle">Mar</text>
+  <text x="490" y="600" font-family="Arial" font-size="12" fill="#666" text-anchor="middle">Abr</text>
+  <text x="560" y="600" font-family="Arial" font-size="12" fill="#666" text-anchor="middle">Mai</text>
+  <text x="630" y="600" font-family="Arial" font-size="12" fill="#666" text-anchor="middle">Jun</text>
+  <text x="700" y="600" font-family="Arial" font-size="12" fill="#666" text-anchor="middle">Jul</text>
+  <text x="770" y="600" font-family="Arial" font-size="12" fill="#666" text-anchor="middle">Ago</text>
+  
+  <!-- Recent Activity -->
+  <rect x="860" y="320" width="320" height="300" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  <text x="880" y="350" font-family="Arial" font-size="18" fill="#666">Atividades Recentes</text>
+  
+  <text x="880" y="390" font-family="Arial" font-size="14" fill="#333">Novo pedido #1024</text>
+  <text x="880" y="410" font-family="Arial" font-size="12" fill="#777">Há 5 minutos</text>
+  <line x1="880" y1="425" x2="1160" y2="425" stroke="#eee" stroke-width="1"/>
+  
+  <text x="880" y="450" font-family="Arial" font-size="14" fill="#333">Produto atualizado: Notebook Dell</text>
+  <text x="880" y="470" font-family="Arial" font-size="12" fill="#777">Há 2 horas</text>
+  <line x1="880" y1="485" x2="1160" y2="485" stroke="#eee" stroke-width="1"/>
+  
+  <text x="880" y="510" font-family="Arial" font-size="14" fill="#333">Novo cliente cadastrado</text>
+  <text x="880" y="530" font-family="Arial" font-size="12" fill="#777">Hoje, 14:35</text>
+  <line x1="880" y1="545" x2="1160" y2="545" stroke="#eee" stroke-width="1"/>
+  
+  <text x="880" y="570" font-family="Arial" font-size="14" fill="#333">Pedido #1018 entregue</text>
+  <text x="880" y="590" font-family="Arial" font-size="12" fill="#777">Hoje, 10:15</text>
+  
+  <!-- Footer -->
+  <rect x="0" y="780" width="100%" height="20" fill="#f0f0f0"/>
+  <text x="600" y="795" font-family="Arial" font-size="12" fill="#777" text-anchor="middle">SisVenda © 2025 - Todos os direitos reservados</text>
 </svg>

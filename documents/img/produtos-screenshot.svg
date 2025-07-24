@@ -1,4 +1,97 @@
-<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg">
-  <rect width="100%" height="100%" fill="#f0f0f0"/>
-  <text x="400" y="250" font-family="Arial" font-size="24" text-anchor="middle">Gestão de Produtos</text>
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="#f8f9fa"/>
+  
+  <!-- Header -->
+  <rect width="100%" height="60" fill="#3498db"/>
+  <text x="30" y="40" font-family="Arial" font-size="24" fill="white" font-weight="bold">SisVenda</text>
+  <text x="1100" y="40" font-family="Arial" font-size="16" fill="white" text-anchor="end">Admin</text>
+  
+  <!-- Sidebar -->
+  <rect x="0" y="60" width="220" height="740" fill="#2c3e50"/>
+  <text x="30" y="100" font-family="Arial" font-size="18" fill="#777" fill-opacity="0.8">Dashboard</text>
+  <rect x="0" y="120" width="220" height="40" fill="#1a2530"/>
+  <text x="30" y="145" font-family="Arial" font-size="18" fill="white">Produtos</text>
+  <text x="30" y="180" font-family="Arial" font-size="18" fill="#777" fill-opacity="0.8">Pedidos</text>
+  <text x="30" y="220" font-family="Arial" font-size="18" fill="#777" fill-opacity="0.8">Clientes</text>
+  <text x="30" y="260" font-family="Arial" font-size="18" fill="#777" fill-opacity="0.8">Relatórios</text>
+  
+  <!-- Main Content -->
+  <rect x="240" y="80" width="940" height="70" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  <text x="260" y="120" font-family="Arial" font-size="24" fill="#333">Gestão de Produtos</text>
+  
+  <!-- Action Buttons -->
+  <rect x="800" y="95" width="150" height="40" rx="4" fill="#3498db"/>
+  <text x="875" y="120" font-family="Arial" font-size="14" fill="white" text-anchor="middle">+ Novo Produto</text>
+  <rect x="970" y="95" width="120" height="40" rx="4" fill="#f8f9fa" stroke="#e0e0e0"/>
+  <text x="1030" y="120" font-family="Arial" font-size="14" fill="#333" text-anchor="middle">Filtrar</text>
+  
+  <!-- Products Grid -->
+  <rect x="240" y="170" width="940" height="580" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  
+  <!-- Product 1 -->
+  <rect x="260" y="190" width="220" height="260" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  <rect x="260" y="190" width="220" height="160" fill="#f8f9fa" rx="5 5 0 0"/>
+  <circle cx="370" cy="260" r="50" fill="#2563eb"/>
+  <text x="370" y="275" font-family="Arial" font-size="36" fill="white" text-anchor="middle" font-weight="bold">NB</text>
+  <text x="280" y="375" font-family="Arial" font-size="16" fill="#333" font-weight="bold">Notebook Dell XPS</text>
+  <text x="280" y="400" font-family="Arial" font-size="14" fill="#777">Código: PROD-001</text>
+  <text x="280" y="425" font-family="Arial" font-size="18" fill="#333" font-weight="bold">R$ 6.999,00</text>
+  
+  <!-- Product 2 -->
+  <rect x="500" y="190" width="220" height="260" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  <rect x="500" y="190" width="220" height="160" fill="#f8f9fa" rx="5 5 0 0"/>
+  <circle cx="610" cy="260" r="50" fill="#16a34a"/>
+  <text x="610" y="275" font-family="Arial" font-size="36" fill="white" text-anchor="middle" font-weight="bold">SP</text>
+  <text x="520" y="375" font-family="Arial" font-size="16" fill="#333" font-weight="bold">Smartphone Galaxy S24</text>
+  <text x="520" y="400" font-family="Arial" font-size="14" fill="#777">Código: PROD-002</text>
+  <text x="520" y="425" font-family="Arial" font-size="18" fill="#333" font-weight="bold">R$ 4.599,00</text>
+  
+  <!-- Product 3 -->
+  <rect x="740" y="190" width="220" height="260" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  <rect x="740" y="190" width="220" height="160" fill="#f8f9fa" rx="5 5 0 0"/>
+  <circle cx="850" cy="260" r="50" fill="#dc2626"/>
+  <text x="850" y="275" font-family="Arial" font-size="36" fill="white" text-anchor="middle" font-weight="bold">TB</text>
+  <text x="760" y="375" font-family="Arial" font-size="16" fill="#333" font-weight="bold">Tablet iPad Pro</text>
+  <text x="760" y="400" font-family="Arial" font-size="14" fill="#777">Código: PROD-003</text>
+  <text x="760" y="425" font-family="Arial" font-size="18" fill="#333" font-weight="bold">R$ 5.299,00</text>
+  
+  <!-- Product 4 -->
+  <rect x="260" y="470" width="220" height="260" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  <rect x="260" y="470" width="220" height="160" fill="#f8f9fa" rx="5 5 0 0"/>
+  <circle cx="370" cy="540" r="50" fill="#7e22ce"/>
+  <text x="370" y="555" font-family="Arial" font-size="36" fill="white" text-anchor="middle" font-weight="bold">FN</text>
+  <text x="280" y="655" font-family="Arial" font-size="16" fill="#333" font-weight="bold">Fone de Ouvido Pro</text>
+  <text x="280" y="680" font-family="Arial" font-size="14" fill="#777">Código: PROD-004</text>
+  <text x="280" y="705" font-family="Arial" font-size="18" fill="#333" font-weight="bold">R$ 1.299,00</text>
+  
+  <!-- Product 5 -->
+  <rect x="500" y="470" width="220" height="260" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  <rect x="500" y="470" width="220" height="160" fill="#f8f9fa" rx="5 5 0 0"/>
+  <circle cx="610" cy="540" r="50" fill="#ea580c"/>
+  <text x="610" y="555" font-family="Arial" font-size="36" fill="white" text-anchor="middle" font-weight="bold">TV</text>
+  <text x="520" y="655" font-family="Arial" font-size="16" fill="#333" font-weight="bold">Smart TV 55"</text>
+  <text x="520" y="680" font-family="Arial" font-size="14" fill="#777">Código: PROD-005</text>
+  <text x="520" y="705" font-family="Arial" font-size="18" fill="#333" font-weight="bold">R$ 3.499,00</text>
+  
+  <!-- Product 6 -->
+  <rect x="740" y="470" width="220" height="260" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  <rect x="740" y="470" width="220" height="160" fill="#f8f9fa" rx="5 5 0 0"/>
+  <circle cx="850" cy="540" r="50" fill="#0891b2"/>
+  <text x="850" y="555" font-family="Arial" font-size="36" fill="white" text-anchor="middle" font-weight="bold">RL</text>
+  <text x="760" y="655" font-family="Arial" font-size="16" fill="#333" font-weight="bold">Relógio Inteligente</text>
+  <text x="760" y="680" font-family="Arial" font-size="14" fill="#777">Código: PROD-006</text>
+  <text x="760" y="705" font-family="Arial" font-size="18" fill="#333" font-weight="bold">R$ 899,00</text>
+  
+  <!-- Pagination -->
+  <rect x="240" y="750" width="940" height="50" fill="#ffffff"/>
+  <text x="270" y="780" font-family="Arial" font-size="14" fill="#777">Mostrando 1-6 de 18 produtos</text>
+  <rect x="880" y="760" width="40" height="30" rx="5" fill="#f8f9fa" stroke="#e0e0e0"/>
+  <text x="900" y="780" font-family="Arial" font-size="14" fill="#333" text-anchor="middle">1</text>
+  <rect x="930" y="760" width="40" height="30" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  <text x="950" y="780" font-family="Arial" font-size="14" fill="#555" text-anchor="middle">2</text>
+  <rect x="980" y="760" width="40" height="30" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  <text x="1000" y="780" font-family="Arial" font-size="14" fill="#555" text-anchor="middle">3</text>
+  <rect x="1030" y="760" width="80" height="30" rx="5" fill="#ffffff" stroke="#e0e0e0"/>
+  <text x="1070" y="780" font-family="Arial" font-size="14" fill="#555" text-anchor="middle">Próximo</text>
 </svg>
