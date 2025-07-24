@@ -6,7 +6,7 @@
 
 Sistema completo de Gestão de Vendas desenvolvido para facilitar a venda de produtos, gerenciar promotores e gerar relatórios. Este repositório contém toda a documentação e o desenvolvimento do sistema proposto na disciplina **Análise e Projeto de Sistemas Computacionais**, no período 2025/1.
 
-![Dashboard](documents/img/dashboard-screenshot.svg)
+![Dashboard](documents/img/dashboard-screen.jpg)
 
 ---
 
@@ -21,6 +21,7 @@ Sistema completo de Gestão de Vendas desenvolvido para facilitar a venda de pro
 - [User Stories](#user-stories)
 - [Como executar o projeto](#como-executar-o-projeto)
 - [Testes](#testes)
+- [Documentação de Telas](#documentação-de-telas)
 
 ---
 
@@ -53,21 +54,18 @@ Este projeto foi desenvolvido como parte da disciplina **Análise e Projeto de S
 
 ## Interfaces e Screenshots
 
-### Dashboard Principal
-![Dashboard](documents/img/dashboard-screenshot.svg)
+### Tela de Login
+![Tela de Login](documents/img/login-screen.jpg)
 
-### Gestão de Produtos
-![Produtos](documents/img/produtos-screenshot.svg)
+### Dashboard Principal
+![Dashboard](documents/img/dashboard-screen.jpg)
 
 ### Relatórios e Gráficos
-![Relatórios](documents/img/relatorios-screenshot.svg)
-
-### Gestão de Pedidos
-![Pedidos](documents/img/pedidos-screenshot.svg)
+![Relatórios](documents/img/relatorios-screen.jpg)
 
 ### Interface Mobile
 <p align="center">
-  <img src="documents/img/mobile-screenshot.svg" alt="Versão Mobile" width="300"/>
+  <img src="documents/img/mobile-screen.jpg" alt="Versão Mobile" width="300"/>
 </p>
 
 ---
@@ -179,3 +177,9 @@ A documentação completa dos cenários de teste está disponível em [documents
 
 # Execute o projeto
 python manage.py runserver
+
+---
+
+## Documentação de Telas
+
+Uma documentação completa com todas as telas do sistema e suas funcionalidades está disponível em [documents/screenshots.md](documents/screenshots.md).
