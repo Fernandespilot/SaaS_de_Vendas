@@ -1,12 +1,12 @@
 # SisVenda - Sistema de Gestão de Vendas
 
 <p align="center">
-  <img src="documents/img/logo-sisvenda.png" alt="SisVenda Logo" width="300"/>
+  <img src="documents/img/logo-sisvenda.svg" alt="SisVenda Logo" width="300"/>
 </p>
 
 Sistema completo de Gestão de Vendas desenvolvido para facilitar a venda de produtos, gerenciar promotores e gerar relatórios. Este repositório contém toda a documentação e o desenvolvimento do sistema proposto na disciplina **Análise e Projeto de Sistemas Computacionais**, no período 2025/1.
 
-![Dashboard](documents/img/dashboard-screenshot.png)
+![Dashboard](documents/img/dashboard-screenshot.svg)
 
 ---
 
@@ -54,20 +54,20 @@ Este projeto foi desenvolvido como parte da disciplina **Análise e Projeto de S
 ## Interfaces e Screenshots
 
 ### Dashboard Principal
-![Dashboard](documents/img/dashboard-screenshot.png)
+![Dashboard](documents/img/dashboard-screenshot.svg)
 
 ### Gestão de Produtos
-![Produtos](documents/img/produtos-screenshot.png)
+![Produtos](documents/img/produtos-screenshot.svg)
 
 ### Relatórios e Gráficos
-![Relatórios](documents/img/relatorios-screenshot.png)
+![Relatórios](documents/img/relatorios-screenshot.svg)
 
 ### Gestão de Pedidos
-![Pedidos](documents/img/pedidos-screenshot.png)
+![Pedidos](documents/img/pedidos-screenshot.svg)
 
 ### Interface Mobile
 <p align="center">
-  <img src="documents/img/mobile-screenshot.png" alt="Versão Mobile" width="300"/>
+  <img src="documents/img/mobile-screenshot.svg" alt="Versão Mobile" width="300"/>
 </p>
 
 ---
